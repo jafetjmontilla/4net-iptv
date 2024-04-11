@@ -1,14 +1,14 @@
 import '@vidstack/react/player/styles/base.css';
 import Image from 'next/image'
-import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react';
-import { isHLSProvider, MediaPlayer, MediaProvider, ScreenOrientationLockType, MediaCanPlayDetail, MediaCanPlayEvent, MediaProviderAdapter, MediaProviderChangeEvent, MediaPlayerInstance, Controls } from '@vidstack/react';
+import { isHLSProvider, MediaPlayer, MediaProvider, ScreenOrientationLockType, MediaCanPlayDetail, MediaCanPlayEvent, MediaProviderAdapter, MediaProviderChangeEvent, MediaPlayerInstance, Controls, VolumeSlider } from '@vidstack/react';
 import { Channel, channelsList } from "../utils/channels"
 import { FaAngleDown, FaAngleUp, FaCompress, FaExpand, FaMinus, FaPlus, FaPowerOff } from "react-icons/fa6";
 import { FaVolumeDown, FaVolumeMute } from "react-icons/fa";
 import { AnimatePresence, motion } from "framer-motion";
 import { RiHomeLine } from 'react-icons/ri';
-import { VolumeSli } from '../Components/VolumeSli';
+import { PictureInPictureExitIcon, PictureInPictureIcon } from '@vidstack/react/icons';
+
 
 interface MyScreenOrientation extends ScreenOrientation {
   lock(orientation: ScreenOrientationLockType): Promise<void>;
@@ -22,6 +22,11 @@ export default function Home() {
   const [isPc, setIsPc] = useState<boolean>(false);
   const [mute, setMute] = useState<boolean>(false);
   const [fullScreen, setFullScreen] = useState<boolean>(false);
+  const [showThumb, setShowThumb] = useState<boolean>(false);
+  const [showPIP, setShowPIP] = useState<boolean>(false);
+  const [eventForUser, setEventForUser] = useState<boolean>(false);
+  const [waitingConfirmation, setWaitingConfirmation] = useState<boolean>(false);
+  const [triggerClosePIP, setTriggerClosePIP] = useState<number | null>(null);
 
   let player = useRef<MediaPlayerInstance>(null);
 
@@ -59,7 +64,6 @@ export default function Home() {
 
   useEffect(() => {
     // Subscribe to state updates.
-    const video = document.querySelector("video")
     return player.current!.subscribe((state: any) => {
       console.log(channel.title)
       console.log('is muted?', '->', state.muted);
@@ -67,6 +71,7 @@ export default function Home() {
       console.log('is audio view?', '->', state.viewType);
     });
   }, []);
+
 
   useEffect(() => {
     const isPc = navigator?.userAgentData?.platform === "Windows"
@@ -90,6 +95,14 @@ export default function Home() {
   }, []);
 
   const handleSwithOff = async () => {
+    const video: HTMLVideoElement | null = document.querySelector("video")
+    if (document.pictureInPictureElement === video) {
+      setEventForUser(true)
+      setTimeout(() => {
+        setShowPIP(false)
+      }, 1500);
+      await document.exitPictureInPicture();
+    }
     if (isPc) {
       if (document?.fullscreenElement) {
         document?.exitFullscreen()
@@ -99,7 +112,6 @@ export default function Home() {
       setShowControl(false)
       setShowVideo(false)
       setTimeout(() => {
-        const video: HTMLVideoElement | null = document.querySelector("video")
         if (video) {
           video.muted = true
         }
@@ -116,7 +128,6 @@ export default function Home() {
         setShowVideo(false)
       }, 400);
       setTimeout(() => {
-        const video: HTMLVideoElement | null = document.querySelector("video")
         if (video) {
           video.muted = true
         }
@@ -125,7 +136,7 @@ export default function Home() {
     }
   }
 
-  const handleFullScreen = () => {
+  const handleFullScreen = async () => {
     const container: any | null = document.getElementById("mediaplayer")
     if (document?.fullscreenElement) {
       if (document?.fullscreenElement) {
@@ -141,13 +152,16 @@ export default function Home() {
           .catch((error: any) =>
             console.log(10004, error)
           )
+        const video: HTMLVideoElement | null = document.querySelector("video")
+        if (document.pictureInPictureElement === video) {
+          video?.play()
+          setEventForUser(true)
+          setShowPIP(false)
+          await document.exitPictureInPicture();
+        }
       }
     }
   }
-
-  useEffect(() => {
-    console.log({ closing })
-  }, [closing])
 
   const handleSwithOn = () => {
     setClosing(false)
@@ -173,6 +187,18 @@ export default function Home() {
     }, 500)
   }
 
+  const volumeChange = (value: number) => {
+    const video: HTMLVideoElement | null = document.querySelector("video")
+    if (video) {
+      let volumeNew = video.volume + value
+      if (volumeNew < 0) volumeNew = 0
+      if (volumeNew > 1) volumeNew = 1
+      if (volumeNew >= 0 && volumeNew <= 1) {
+        video.volume = volumeNew
+      }
+    }
+  }
+
   const handleMouseLeave = () => {
     if (!showControl) {
       setShowControl(true);
@@ -185,8 +211,67 @@ export default function Home() {
     valirTimeout = ID
   };
 
+  useEffect(() => {
+    if (triggerClosePIP) {
+      //se ejectuta sino es generado por intervencion del usuario
+      if (!eventForUser) {
+        const video: HTMLVideoElement | null = document.querySelector("video")
+        if (video) {
+          setTimeout(() => {
+            //click en volver a la pestaña
+            if (!video.paused) {
+              if (isPc) {
+                setShowPIP(false)
+              }
+              if (!isPc) {
+                setShowPIP(false)
+                setWaitingConfirmation(true)
+                console.log("primero pausar y despues haciendo click en el div: darle play quitar div superpuesto, y espandir a pantalla completa ")
+              }
+            } else {
+              //cerrado en la x del pip y click en volver a la pestaña estando pausado
+              handleSwithOff()
+              setTimeout(() => {
+                setShowPIP(false)
+              }, isPc ? 1000 : 1500);
+            }
+
+          }, 200);
+        }
+      }
+      const video: HTMLVideoElement | null = document.querySelector("video")
+      if (video) {
+        video.removeEventListener('leavepictureinpicture', () => { });
+      }
+      setEventForUser(false)
+    }
+  }, [triggerClosePIP])
+  const handlePIP = async () => {
+    const video: HTMLVideoElement | null = document.querySelector("video")
+    if (video && !showPIP) {
+      setShowPIP(true)
+      await video.requestPictureInPicture();
+      video.addEventListener('leavepictureinpicture', () => { setTriggerClosePIP(new Date().getTime()) });
+      return
+    }
+    if (document.pictureInPictureElement === video) {
+      setEventForUser(true)
+      await document.exitPictureInPicture();
+      if (!isPc) {
+        setWaitingConfirmation(true)
+      }
+      setShowPIP(false)
+      video?.play()
+    }
+  }
+
   return (
-    <main className={`bg-black flex min-h-screen flex-col items-center justify-center vertical-content`}    >
+    <main
+      onClick={() => {
+        waitingConfirmation && handleFullScreen()
+        setWaitingConfirmation(false)
+      }}
+      className={`bg-black flex min-h-screen flex-col items-center justify-center vertical-content`}    >
       <AnimatePresence  >
         {!showVideo && <motion.div
           key={"1"}
@@ -204,6 +289,10 @@ export default function Home() {
             <Image style={{ objectFit: 'cover' }} height={40} width={300} alt={channel.title} src={"/4netBlancoGradient.png"} />
           </div>
         </motion.div>}
+        {showPIP && <div className='top-0 left-0 w-[100vw] h-[100vh] bg-black fixed z-10 flex justify-center text-xs md:text-sm pt-10' >
+          Reproduciendo en modo pantalla en pantalla
+        </div>}
+
         <motion.div
           key={"2"}
           initial={false}
@@ -226,8 +315,7 @@ export default function Home() {
             playsInline={true}
             title={channel.title}
             onProviderChange={onProviderChange}
-            onCanPlay={onCanPlay}
-          >
+            onCanPlay={onCanPlay}>
             <MediaProvider />
             <div className={`absolute inset-0 z-10 flex h-full w-full flex-col justify-center items-end -translate-x-7 md:-translate-x-20`}>
               <AnimatePresence >
@@ -250,10 +338,24 @@ export default function Home() {
                                 <div className="w-1/3 h-full flex flex-col items-center justify-between py-8">
                                   <div onClick={() => { handleSwithOff() }} className="w-[60px] h-[60px]  rounded-full border-4 border-white flex justify-center items-center cursor-pointer" ><FaPowerOff className="w-8 h-8 hover:scale-110" /></div>
 
-                                  <div className="w-[56px] md:w-[52px] h-[138px]  rounded-full border-4 border-white flex flex-col justify-center items-center relative" >
-                                    <div className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaPlus className="w-6 h-6" /></div>
+                                  <div
+                                    onMouseEnter={() => setShowThumb(true)}
+                                    onMouseLeave={() => setShowThumb(false)}
+                                    className="w-[56px] md:w-[52px] h-[138px]  rounded-full border-4 border-white flex flex-col justify-center items-center relative" >
+                                    <div className='w-[10px] h-[90px] absolute -translate-x-[66px]'>
+                                      <VolumeSlider.Root
+                                        className="group relative *my-[7.5px] inline-flex w-10 h-full max-h-[90px] cursor-pointer touch-none select-none items-center outline-none *aria-hidden:hidden justify-end"
+                                        orientation="vertical"
+                                      >
+                                        <VolumeSlider.Track className="relative ring-sky-400 z-0 w-[5px] h-full rounded-sm bg-white/30 group-data-[focus]:ring-[3px] rotate-180">
+                                          <VolumeSlider.TrackFill className="bg-indigo-400 absolute w-full h-[var(--slider-fill)] rounded-sm will-change-[height]" />
+                                        </VolumeSlider.Track>
+                                        <VolumeSlider.Thumb className={`absolute bottom-[var(--slider-fill)] z-20 h-[10px] w-[10px] translate-x-1/4 translate-y-1/2 rounded-full border border-[#cacaca] bg-white opacity-0 ring-white/40 transition-opacity ${showThumb && "opacity-100"} group-data-[active]:opacity-100 group-data-[dragging]:ring-4 will-change-[bottom]`} />
+                                      </VolumeSlider.Root>
+                                    </div>
+                                    <div onClick={() => { volumeChange(0.05) }} className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaPlus className="w-6 h-6" /></div>
                                     <div className="w-full h-1/3 flex justify-center items-center text-lg">Vol</div>
-                                    <div className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaMinus className="w-6 h-6" /></div>
+                                    <div onClick={() => { volumeChange(-0.05) }} className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaMinus className="w-6 h-6" /></div>
                                   </div>
                                   <div onClick={() => { setMute(!mute) }} className="w-[60px] h-[60px]  rounded-full border-4 border-white flex justify-center items-center cursor-pointer" >
                                     {mute
@@ -280,10 +382,15 @@ export default function Home() {
                                     <div className="w-full h-1/3 flex justify-center items-center text-lg">Ch</div>
                                     <div className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaAngleDown className="w-6 h-6" /></div>
                                   </div>
-                                  <div className="w-[60px] h-[60px]  rounded-full border-4 border-white flex justify-center items-center cursor-pointer" >
-                                    <div className='w-9 h-6 rounded-[4px] border-[3px] border-white flex justify-end items-end p-[2px] hover:scale-110'>
+                                  <div onClick={handlePIP} className="w-[60px] h-[60px]  rounded-full border-4 border-white flex justify-center items-center cursor-pointer" >
+                                    {!showPIP ?
+                                      <PictureInPictureIcon className="w-11 h-11 hover:scale-110" />
+                                      :
+                                      <PictureInPictureExitIcon className="w-10 h-10 hover:scale-110" />
+                                    }
+                                    {/* <div className='w-9 h-6 rounded-[4px] border-[3px] border-white flex justify-end items-end p-[2px] hover:scale-110'>
                                       <div className='bg-white w-4 h-2.5 rounded-[2px] border-white' />
-                                    </div>
+                                    </div> */}
                                   </div>
                                 </div>
                               </div>
