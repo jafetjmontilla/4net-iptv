@@ -1,7 +1,7 @@
 import '@vidstack/react/player/styles/base.css';
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react';
-import { isHLSProvider, MediaPlayer, MediaProvider, ScreenOrientationLockType, MediaCanPlayDetail, MediaCanPlayEvent, MediaProviderAdapter, MediaProviderChangeEvent, MediaPlayerInstance, Controls, VolumeSlider } from '@vidstack/react';
+import { isHLSProvider, MediaPlayer, MediaProvider, ScreenOrientationLockType, MediaCanPlayDetail, MediaCanPlayEvent, MediaProviderAdapter, MediaProviderChangeEvent, MediaPlayerInstance, Controls, VolumeSlider, MediaPlayerState } from '@vidstack/react';
 import { Channel, channelsList } from "../utils/channels"
 import { FaAngleDown, FaAngleUp, FaCompress, FaExpand, FaMinus, FaPlus, FaPowerOff } from "react-icons/fa6";
 import { FaVolumeDown, FaVolumeMute } from "react-icons/fa";
@@ -33,11 +33,11 @@ export default function Home() {
   const [eventForUser, setEventForUser] = useState<boolean>(false);
   const [waitingConfirmation, setWaitingConfirmation] = useState<boolean>(false);
   const [triggerClosePIP, setTriggerClosePIP] = useState<number | null>(null);
+  const [playerState, setPlayerState] = useState<MediaPlayerState>();
 
   useEffect(() => {
     if (showVideo && channel && volume) {
       const dataStorage = { numberChannel: channel.numberChannel, volume }
-      console.log("**************", volume)
       localStorage.setItem("Tv", JSON.stringify(dataStorage));
     }
   }, [channel, volume])
@@ -70,22 +70,32 @@ export default function Home() {
   useEffect(() => {
     document.addEventListener('mousemove', handleMouseLeave);
     document.addEventListener('click', handleMouseLeave);
+    const video: HTMLVideoElement | null = document.querySelector("video")
+    if (video) {
+      video.addEventListener('volumechange', (e: any) => { setVolume(e?.target?.volume) });
+    }
 
     return () => {
       clearTimeout(valirTimeout);
       document.removeEventListener('mousemove', handleMouseLeave);
       document.removeEventListener('click', handleMouseLeave);
+      const video: HTMLVideoElement | null = document.querySelector("video")
+      if (video) {
+        video.removeEventListener('volumechange', (e: any) => { setVolume(e?.target?.volume) });
+      }
     };
   }, []);
 
   useEffect(() => {
     // Subscribe to state updates.
-    return player.current!.subscribe((state: any) => {
+    return player.current!.subscribe((state: MediaPlayerState) => {
+      setPlayerState(state)
       console.log(channel?.title)
       console.log('is volume?', '->', state.volume);
       console.log('is muted?', '->', state.muted);
       console.log('is paused?', '->', state.paused);
       console.log('is audio view?', '->', state.viewType);
+      console.log('state', '->', state.source);
     });
   }, []);
 
@@ -224,6 +234,7 @@ export default function Home() {
       if (volumeNew >= 0 && volumeNew <= 1) {
         video.volume = volumeNew
         setVolume(video.volume)
+        setMute(false)
       }
     }
   }
