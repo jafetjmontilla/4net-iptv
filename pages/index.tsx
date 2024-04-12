@@ -14,6 +14,11 @@ interface MyScreenOrientation extends ScreenOrientation {
   lock(orientation: ScreenOrientationLockType): Promise<void>;
 }
 
+interface dataStoragePros {
+  numberChannel: number
+  volume: number
+}
+
 export default function Home() {
   const [showVideo, setShowVideo] = useState<boolean>(false)
   const [channel, setChannel] = useState<Channel>(channelsList[1])
@@ -21,12 +26,21 @@ export default function Home() {
   const [closing, setClosing] = useState<boolean>(false);
   const [isPc, setIsPc] = useState<boolean>(false);
   const [mute, setMute] = useState<boolean>(false);
+  const [volume, setVolume] = useState<number>(0.1);
   const [fullScreen, setFullScreen] = useState<boolean>(false);
   const [showThumb, setShowThumb] = useState<boolean>(false);
   const [showPIP, setShowPIP] = useState<boolean>(false);
   const [eventForUser, setEventForUser] = useState<boolean>(false);
   const [waitingConfirmation, setWaitingConfirmation] = useState<boolean>(false);
   const [triggerClosePIP, setTriggerClosePIP] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (showVideo && channel && volume) {
+      const dataStorage = { numberChannel: channel.numberChannel, volume }
+      console.log("**************", volume)
+      localStorage.setItem("Tv", JSON.stringify(dataStorage));
+    }
+  }, [channel, volume])
 
   let player = useRef<MediaPlayerInstance>(null);
 
@@ -55,17 +69,20 @@ export default function Home() {
 
   useEffect(() => {
     document.addEventListener('mousemove', handleMouseLeave);
+    document.addEventListener('click', handleMouseLeave);
 
     return () => {
       clearTimeout(valirTimeout);
       document.removeEventListener('mousemove', handleMouseLeave);
+      document.removeEventListener('click', handleMouseLeave);
     };
   }, []);
 
   useEffect(() => {
     // Subscribe to state updates.
     return player.current!.subscribe((state: any) => {
-      console.log(channel.title)
+      console.log(channel?.title)
+      console.log('is volume?', '->', state.volume);
       console.log('is muted?', '->', state.muted);
       console.log('is paused?', '->', state.paused);
       console.log('is audio view?', '->', state.viewType);
@@ -95,6 +112,7 @@ export default function Home() {
   }, []);
 
   const handleSwithOff = async () => {
+    const exitChannel = { ...channel, title: "", logo: "", src: "" }
     const video: HTMLVideoElement | null = document.querySelector("video")
     if (document.pictureInPictureElement === video) {
       setEventForUser(true)
@@ -115,7 +133,7 @@ export default function Home() {
         if (video) {
           video.muted = true
         }
-        setChannel({ id: 0, title: "", logo: "", src: "" })
+        setChannel({ ...exitChannel })
       }, 1500);
     }
     else {
@@ -131,7 +149,7 @@ export default function Home() {
         if (video) {
           video.muted = true
         }
-        setChannel({ id: 0, title: "", logo: "", src: "" })
+        setChannel({ ...exitChannel })
       }, 1500);
     }
   }
@@ -163,17 +181,27 @@ export default function Home() {
     }
   }
 
+  useEffect(() => {
+    let dataStorage: dataStoragePros = JSON.parse(localStorage.getItem("Tv") ?? "{}");
+    if (showVideo) {
+      localStorage.setItem("Tv", JSON.stringify(dataStorage));
+    }
+  }, [])
+
   const handleSwithOn = () => {
+    let dataStorage: dataStoragePros = JSON.parse(localStorage.getItem("Tv") ?? "{}");
     setClosing(false)
     setTimeout(() => {
       setShowVideo(true)
-      setChannel(channelsList[12])
+      const f1 = channelsList.findIndex(elem => elem.numberChannel === dataStorage?.numberChannel ?? 101)
+      setChannel(channelsList[f1])
       setTimeout(() => {
         const video: HTMLVideoElement | null = document.querySelector("video")
         const container: any | null = document.getElementById("mediaplayer")
         if (video) {
           video.muted = false
-          video.volume = 0.5
+          video.volume = dataStorage?.volume ?? 0.1
+          setVolume(video.volume)
           if (container?.requestFullscreen && !isPc) {
             container?.requestFullscreen({ navigationUI: "hide" });
             (screen.orientation as MyScreenOrientation).lock('landscape')
@@ -195,6 +223,7 @@ export default function Home() {
       if (volumeNew > 1) volumeNew = 1
       if (volumeNew >= 0 && volumeNew <= 1) {
         video.volume = volumeNew
+        setVolume(video.volume)
       }
     }
   }
@@ -265,6 +294,19 @@ export default function Home() {
     }
   }
 
+  const handleChannel = async (action: number) => {
+    let idx = channelsList.findIndex(elem => elem.numberChannel === channel?.numberChannel)
+    idx = idx + action
+    if (idx === 0) {
+      idx = channelsList.length - 1
+    }
+    if (idx === channelsList.length) {
+      idx = 1
+    }
+    console.log(100014, { idx })
+    setChannel(channelsList[idx])
+  }
+
   return (
     <main
       onClick={() => {
@@ -286,7 +328,7 @@ export default function Home() {
                 <FaPowerOff className='w-20 h-20 text-white ' />
               </div>
             </div>
-            <Image style={{ objectFit: 'cover' }} height={40} width={300} alt={channel.title} src={"/4netBlancoGradient.png"} />
+            <Image style={{ objectFit: 'cover' }} height={40} width={300} alt={channel?.title} src={"/4netBlancoGradient.png"} />
           </div>
         </motion.div>}
         {showPIP && <div className='top-0 left-0 w-[100vw] h-[100vh] bg-black fixed z-10 flex justify-center text-xs md:text-sm pt-10' >
@@ -306,14 +348,15 @@ export default function Home() {
           <MediaPlayer
             ref={player}
             id='mediaplayer'
-            muted={true}
+            muted={!showVideo}
             autoPlay={true}
+            volume={0.1}
             className={`aspect-video bg-black text-white font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4`}
             // title="Sprite Fight"
-            src={[{ src: channel.src }]}
+            src={[{ src: channel?.src }]}
             crossOrigin={true}
             playsInline={true}
-            title={channel.title}
+            title={channel?.title}
             onProviderChange={onProviderChange}
             onCanPlay={onCanPlay}>
             <MediaProvider />
@@ -348,7 +391,7 @@ export default function Home() {
                                         orientation="vertical"
                                       >
                                         <VolumeSlider.Track className="relative ring-sky-400 z-0 w-[5px] h-full rounded-sm bg-white/30 group-data-[focus]:ring-[3px] rotate-180">
-                                          <VolumeSlider.TrackFill className="bg-indigo-400 absolute w-full h-[var(--slider-fill)] rounded-sm will-change-[height]" />
+                                          <VolumeSlider.TrackFill defaultValue={0.1} className="bg-indigo-400 absolute w-full h-[var(--slider-fill)] rounded-sm will-change-[height]" />
                                         </VolumeSlider.Track>
                                         <VolumeSlider.Thumb className={`absolute bottom-[var(--slider-fill)] z-20 h-[10px] w-[10px] translate-x-1/4 translate-y-1/2 rounded-full border border-[#cacaca] bg-white opacity-0 ring-white/40 transition-opacity ${showThumb && "opacity-100"} group-data-[active]:opacity-100 group-data-[dragging]:ring-4 will-change-[bottom]`} />
                                       </VolumeSlider.Root>
@@ -378,9 +421,9 @@ export default function Home() {
                                   }
 
                                   <div className="w-[56px] md:w-[52px] h-[138px]  rounded-full border-4 border-white flex flex-col justify-center items-center" >
-                                    <div className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaAngleUp className="w-6 h-6" /></div>
+                                    <div onClick={() => { handleChannel(-1) }} className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaAngleUp className="w-6 h-6" /></div>
                                     <div className="w-full h-1/3 flex justify-center items-center text-lg">Ch</div>
-                                    <div className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaAngleDown className="w-6 h-6" /></div>
+                                    <div onClick={() => { handleChannel(1) }} className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaAngleDown className="w-6 h-6" /></div>
                                   </div>
                                   <div onClick={handlePIP} className="w-[60px] h-[60px]  rounded-full border-4 border-white flex justify-center items-center cursor-pointer" >
                                     {!showPIP ?
@@ -395,7 +438,7 @@ export default function Home() {
                                 </div>
                               </div>
                               <div className='w-full flex-1 flex items-center justify-center pb-6'>
-                                <Image style={{ objectFit: 'cover' }} height={10} width={75} alt={channel.title} src={"/4netBlancoGradient.png"} />
+                                <Image style={{ objectFit: 'cover' }} height={10} width={75} alt={channel?.title} src={"/4netBlancoGradient.png"} />
                               </div>
                             </div>
                           </div>
