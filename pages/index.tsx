@@ -14,9 +14,14 @@ interface MyScreenOrientation extends ScreenOrientation {
   lock(orientation: ScreenOrientationLockType): Promise<void>;
 }
 
-interface dataStoragePros {
+interface DataStoragePros {
   numberChannel: number
   volume: number
+}
+
+interface ScreenSize {
+  w: number
+  h: number
 }
 
 export default function Home() {
@@ -33,7 +38,15 @@ export default function Home() {
   const [eventForUser, setEventForUser] = useState<boolean>(false);
   const [waitingConfirmation, setWaitingConfirmation] = useState<boolean>(false);
   const [triggerClosePIP, setTriggerClosePIP] = useState<number | null>(null);
+  const [triggerFullChange, setTriggerFullChange] = useState<number | null>(null);
+  const [screenSize, setScreenSize] = useState<ScreenSize | null>(null);
+  const [controlSize, setControlSize] = useState<ScreenSize>({ w: 265, h: 468 });
   const [playerState, setPlayerState] = useState<MediaPlayerState>();
+  const [widthVideo, setWidthVideo] = useState<number | null>(null);
+  const [heightVideo, setHeightVideo] = useState<number | null>(null);
+  const [keyPressed, setKeyPressed] = useState<string | null>(null);
+  const [platform, setPlatfomr] = useState<string | null>(null);
+
 
   useEffect(() => {
     if (showVideo && channel && volume) {
@@ -50,6 +63,7 @@ export default function Home() {
     provider: MediaProviderAdapter | null,
     nativeEvent: MediaProviderChangeEvent,
   ) {
+    console.log("-------------------------------->", provider)
     // We can configure provider's here.
     if (isHLSProvider(provider)) {
       provider.config = {};
@@ -70,6 +84,7 @@ export default function Home() {
   useEffect(() => {
     document.addEventListener('mousemove', handleMouseLeave);
     document.addEventListener('click', handleMouseLeave);
+    document.addEventListener("keydown", (e: KeyboardEvent) => { handleKeyDown(e) });
     const video: HTMLVideoElement | null = document.querySelector("video")
     if (video) {
       video.addEventListener('volumechange', (e: any) => { setVolume(e?.target?.volume) });
@@ -79,6 +94,7 @@ export default function Home() {
       clearTimeout(valirTimeout);
       document.removeEventListener('mousemove', handleMouseLeave);
       document.removeEventListener('click', handleMouseLeave);
+      document.removeEventListener("keydown", handleKeyDown);
       const video: HTMLVideoElement | null = document.querySelector("video")
       if (video) {
         video.removeEventListener('volumechange', (e: any) => { setVolume(e?.target?.volume) });
@@ -99,37 +115,95 @@ export default function Home() {
     });
   }, []);
 
+  useEffect(() => {
+    let widthVideo = 1
+    if (window) {
+      if ((window.innerWidth * 9 / 16) < window.innerHeight) {
+        widthVideo = window.innerWidth - 12
+        setWidthVideo(widthVideo)
+      } else {
+        widthVideo = window.innerHeight * 16 / 9 - 12
+        setWidthVideo(widthVideo)
+      }
+    }
+
+  }, [screenSize])
+
+  useEffect(() => {
+    console.log({ widthVideo })
+  }, [widthVideo])
+
 
   useEffect(() => {
     const isPc = navigator?.userAgentData?.platform === "Windows"
     setIsPc(isPc)
+    setPlatfomr(`${navigator?.userAgentData?.platform} / mobile: ${navigator?.userAgentData?.mobile}`)
+    console.log(navigator)
+    const c = navigator?.userAgent.split(" ")
+    setPlatfomr(`${c[0].split("/")[0]} / dis: ${c[1].split(" ")[0].slice(1)}`)
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+      setPlatfomr("mobile")
+    } else {
+      setPlatfomr("NO mobile")
+    }
+
+    // Opera 8.0+ 
+    let isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+    // Firefox 1.0+ 
+    let isFirefox = typeof InstallTrigger !== 'undefined';
+    // Safari 3.0+ 
+    let isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+
+    isOpera && setPlatfomr("Opera")
+    isFirefox && setPlatfomr("Firefox")
+    isSafari && setPlatfomr("Safari")
+
+
+    console.log({ isOpera, isFirefox, isSafari })
+    window.onbeforeunload = function (e) {
+      alert("algo12")
+      console.log("Evento detectado: el usuario hizo clic en el botón de volver.");
+      // Aquí puedes ejecutar la función que desees.
+    };
+
     // const handlePopstate = () => {
     //   console.log('El usuario presionó el botón de volver');
-    //   alert("algo1")
+    //   alert("algo13")
     //   // Aquí puedes agregar la lógica que deseas ejecutar
     // };
     const handleFullChange = (e: any) => {
       if (!document?.fullscreenElement) {
         setFullScreen(false)
+        setTriggerFullChange(new Date().getTime())
       }
     };
     // window.addEventListener('popstate', handlePopstate);
     window.addEventListener('fullscreenchange', handleFullChange);
+    window.addEventListener('resize', handleResize);
     return () => {
       // window.removeEventListener('popstate', handlePopstate);
       window.removeEventListener('fullscreenchange', handleFullChange);
     };
   }, []);
 
+  const handleKeyDown = (e: KeyboardEvent) => {
+    e?.defaultPrevented
+    setKeyPressed(e.code)
+  }
+
+  const handleResize = () => {
+    setScreenSize({ w: window.innerWidth, h: window.innerHeight })
+  }
+
   const handleSwithOff = async () => {
     const exitChannel = { ...channel, title: "", logo: "", src: "" }
     const video: HTMLVideoElement | null = document.querySelector("video")
-    if (document.pictureInPictureElement === video) {
+    if (document?.pictureInPictureElement === video) {
       setEventForUser(true)
       setTimeout(() => {
         setShowPIP(false)
       }, 1500);
-      await document.exitPictureInPicture();
+      await document?.exitPictureInPicture();
     }
     if (isPc) {
       if (document?.fullscreenElement) {
@@ -181,7 +255,7 @@ export default function Home() {
             console.log(10004, error)
           )
         const video: HTMLVideoElement | null = document.querySelector("video")
-        if (document.pictureInPictureElement === video) {
+        if (document?.pictureInPictureElement === video) {
           video?.play()
           setEventForUser(true)
           setShowPIP(false)
@@ -192,14 +266,14 @@ export default function Home() {
   }
 
   useEffect(() => {
-    let dataStorage: dataStoragePros = JSON.parse(localStorage.getItem("Tv") ?? "{}");
+    let dataStorage: DataStoragePros = JSON.parse(localStorage.getItem("Tv") ?? "{}");
     if (showVideo) {
       localStorage.setItem("Tv", JSON.stringify(dataStorage));
     }
   }, [])
 
   const handleSwithOn = () => {
-    let dataStorage: dataStoragePros = JSON.parse(localStorage.getItem("Tv") ?? "{}");
+    let dataStorage: DataStoragePros = JSON.parse(localStorage.getItem("Tv") ?? "{}");
     setClosing(false)
     setTimeout(() => {
       setShowVideo(true)
@@ -252,6 +326,14 @@ export default function Home() {
   };
 
   useEffect(() => {
+    if (triggerFullChange) {
+      if (platform === "mobile" && showPIP === false) {
+        handleSwithOff()
+      }
+    }
+  }, [triggerFullChange])
+
+  useEffect(() => {
     if (triggerClosePIP) {
       //se ejectuta sino es generado por intervencion del usuario
       if (!eventForUser) {
@@ -294,7 +376,7 @@ export default function Home() {
       video.addEventListener('leavepictureinpicture', () => { setTriggerClosePIP(new Date().getTime()) });
       return
     }
-    if (document.pictureInPictureElement === video) {
+    if (document?.pictureInPictureElement === video) {
       setEventForUser(true)
       await document.exitPictureInPicture();
       if (!isPc) {
@@ -306,16 +388,20 @@ export default function Home() {
   }
 
   const handleChannel = async (action: number) => {
-    let idx = channelsList.findIndex(elem => elem.numberChannel === channel?.numberChannel)
-    idx = idx + action
-    if (idx === 0) {
-      idx = channelsList.length - 1
+    try {
+      let idx = channelsList.findIndex(elem => elem.numberChannel === channel?.numberChannel)
+      idx = idx + action
+      if (idx === 0) {
+        idx = channelsList.length - 1
+      }
+      if (idx === channelsList.length) {
+        idx = 1
+      }
+      console.log(100014, { idx })
+      setChannel(channelsList[idx])
+    } catch (error) {
+      console.log(1001141, error)
     }
-    if (idx === channelsList.length) {
-      idx = 1
-    }
-    console.log(100014, { idx })
-    setChannel(channelsList[idx])
   }
 
   return (
@@ -324,16 +410,16 @@ export default function Home() {
         waitingConfirmation && handleFullScreen()
         setWaitingConfirmation(false)
       }}
-      className={`bg-black flex min-h-screen flex-col items-center justify-center vertical-content`}    >
+      className={`bg-black flex w-screen h-screen flex-col items-center justify-center vertical-content`}    >
       <AnimatePresence  >
         {!showVideo && <motion.div
           key={"1"}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, transition: { delay: closing ? 1 : 0, duration: 0.4 } }}
           exit={{ opacity: 0, transition: { duration: 0.2 } }}
-          className='absolute right-10 bottom-10'
+          className='absolute -right-10 md:right-10 -bottom-6 md:bottom-10 scale-50 md:scale-100'
         >
-          <div className='flex flex-col items-center'>
+          <div className='flex flex-col items-center '>
             <div className='items-center'>
               <div onClick={handleSwithOn} className="inline-flex cursor-pointer p-8 bg-slate-900 rounded-full hover:scale-110 hover:bg-slate-800">
                 <FaPowerOff className='w-20 h-20 text-white ' />
@@ -350,8 +436,8 @@ export default function Home() {
           key={"2"}
           initial={false}
           animate={{
-            width: !showVideo ? 0 : "100%",
-            transition: { delay: 0.5, duration: 0.4 }
+            width: !showVideo ? 0 : widthVideo ?? 0,
+            transition: { delay: 0, duration: 0.4 }
           }}
           exit={{ opacity: 0, transition: { duration: 0.2 } }}
           className='absolute'
@@ -368,9 +454,21 @@ export default function Home() {
             crossOrigin={true}
             playsInline={true}
             title={channel?.title}
+            onSourceChange={(e) => console.log("||||||||||||||||||||||||||===================>", e)}
             onProviderChange={onProviderChange}
+            // onError={() => { alert("error1") }}
             onCanPlay={onCanPlay}>
-            <MediaProvider />
+
+            <div className='fixed top-6 left-6 z-10 bg-red-500 w-64 h-12 flex flex-col justify-center items-center'>
+              <span className='text-white font-extrabold'>{keyPressed}</span>
+              <span className='text-white font-extrabold'>{platform}</span>
+            </div>
+            {/* <div className='fixed right-6 bottom-6 z-10 bg-red-500 w-64 flex flex-col justify-center items-center'>
+              <span className='text-white font-extrabold'>{keyPressed}</span>
+              <span className='text-white font-extrabold'>{platform}</span>
+            </div> */}
+
+            <MediaProvider onError={(error) => { console.log(545410, error) }} />
             <div className={`absolute inset-0 z-10 flex h-full w-full flex-col justify-center items-end -translate-x-7 md:-translate-x-20`}>
               <AnimatePresence >
                 {showControl &&
@@ -386,7 +484,7 @@ export default function Home() {
                           animate={{ opacity: 0.8, transition: { duration: 0.4 } }}
                           exit={{ opacity: 0, transition: { duration: 0.15 } }}
                         >
-                          <div className={`bg-black p-2 rounded-3xl *opacity-80 scale-[65%] md:scale-100`}>
+                          <div className={`bg-black p-2 rounded-3xl *opacity-80 scale-[65%] lg:scale-100`}>
                             <div className="w-[265px] h-[478px] rounded-3xl border-white border-8 flex flex-col" >
                               <div className="w-full h-[85%] flex">
                                 <div className="w-1/3 h-full flex flex-col items-center justify-between py-8">
@@ -448,7 +546,7 @@ export default function Home() {
                                   </div>
                                 </div>
                               </div>
-                              <div className='w-full flex-1 flex items-center justify-center pb-6'>
+                              <div className='w-full flex-1 flex items-center justify-center pb-6 text-2xl'>
                                 <Image style={{ objectFit: 'cover' }} height={10} width={75} alt={channel?.title} src={"/4netBlancoGradient.png"} />
                               </div>
                             </div>

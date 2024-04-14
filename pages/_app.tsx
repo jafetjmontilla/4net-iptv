@@ -4,16 +4,18 @@ import Head from 'next/head';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <div className='bg-black w-screen h-screen'>
+    <>
       <Head>
         <title>4net TV</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="description" content="¡IPTV! Fournet." />
       </Head>
       <Component {...pageProps} />
       <style jsx global>
         {`
         body {
+          overflow: hidden;
           background-color: #000 !important;
           overscroll-behavior: contain;
         }
@@ -33,6 +35,6 @@ export default function App({ Component, pageProps }: AppProps) {
         }
       `}
       </style>
-    </div>
+    </>
   )
 }
