@@ -50,7 +50,7 @@ export default function Home() {
 
   useEffect(() => {
     if (showVideo && channel && volume) {
-      const dataStorage = { numberChannel: channel.numberChannel, volume }
+      const dataStorage = { numberChannel: channel?.numberChannel, volume }
       localStorage.setItem("Tv", JSON.stringify(dataStorage));
     }
   }, [channel, volume])
@@ -82,6 +82,9 @@ export default function Home() {
   }, [mute])
 
   useEffect(() => {
+    // if (window) {
+    //   console.log(new window.MediaMetadata())
+    // }
     document.addEventListener('mousemove', handleMouseLeave);
     document.addEventListener('click', handleMouseLeave);
     document.addEventListener("keydown", (e: KeyboardEvent) => { handleKeyDown(e) });
@@ -95,7 +98,7 @@ export default function Home() {
       document.removeEventListener('mousemove', handleMouseLeave);
       document.removeEventListener('click', handleMouseLeave);
       document.removeEventListener("keydown", handleKeyDown);
-      const video: HTMLVideoElement | null = document.querySelector("video")
+      const video: HTMLVideoElement | null = document?.querySelector("video")
       if (video) {
         video.removeEventListener('volumechange', (e: any) => { setVolume(e?.target?.volume) });
       }
@@ -139,7 +142,7 @@ export default function Home() {
     setIsPc(isPc)
     setPlatfomr(`${navigator?.userAgentData?.platform} / mobile: ${navigator?.userAgentData?.mobile}`)
     console.log(navigator)
-    const c = navigator?.userAgent.split(" ")
+    const c = navigator?.userAgent?.split(" ")
     setPlatfomr(`${c[0].split("/")[0]} / dis: ${c[1].split(" ")[0].slice(1)}`)
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
       setPlatfomr("mobile")
@@ -188,11 +191,11 @@ export default function Home() {
 
   const handleKeyDown = (e: KeyboardEvent) => {
     e?.defaultPrevented
-    setKeyPressed(e.code)
+    setKeyPressed(e?.code)
   }
 
   const handleResize = () => {
-    setScreenSize({ w: window.innerWidth, h: window.innerHeight })
+    setScreenSize({ w: window?.innerWidth, h: window?.innerHeight })
   }
 
   const handleSwithOff = async () => {
@@ -277,7 +280,7 @@ export default function Home() {
     setClosing(false)
     setTimeout(() => {
       setShowVideo(true)
-      const f1 = channelsList.findIndex(elem => elem.numberChannel === dataStorage?.numberChannel ?? 101)
+      const f1 = channelsList.findIndex(elem => elem?.numberChannel === dataStorage?.numberChannel ? dataStorage?.numberChannel : 101)
       setChannel(channelsList[f1])
       setTimeout(() => {
         const video: HTMLVideoElement | null = document.querySelector("video")
@@ -378,7 +381,7 @@ export default function Home() {
     }
     if (document?.pictureInPictureElement === video) {
       setEventForUser(true)
-      await document.exitPictureInPicture();
+      await document?.exitPictureInPicture();
       if (!isPc) {
         setWaitingConfirmation(true)
       }
@@ -442,7 +445,7 @@ export default function Home() {
           exit={{ opacity: 0, transition: { duration: 0.2 } }}
           className='absolute'
         >
-          <MediaPlayer
+          {true && <MediaPlayer
             ref={player}
             id='mediaplayer'
             muted={!showVideo}
@@ -453,7 +456,11 @@ export default function Home() {
             src={[{ src: channel?.src }]}
             crossOrigin={true}
             playsInline={true}
-            title={channel?.title}
+            artist=""
+            title=""
+            artwork={[]}
+            album=""
+            //title={channel?.title}
             onSourceChange={(e) => console.log("||||||||||||||||||||||||||===================>", e)}
             onProviderChange={onProviderChange}
             // onError={() => { alert("error1") }}
@@ -462,6 +469,7 @@ export default function Home() {
             <div className='fixed top-6 left-6 z-10 bg-red-500 w-64 h-12 flex flex-col justify-center items-center'>
               <span className='text-white font-extrabold'>{keyPressed}</span>
               <span className='text-white font-extrabold'>{platform}</span>
+              <span className='text-white font-extrabold'>{channel?.title}</span>
             </div>
             {/* <div className='fixed right-6 bottom-6 z-10 bg-red-500 w-64 flex flex-col justify-center items-center'>
               <span className='text-white font-extrabold'>{keyPressed}</span>
@@ -558,7 +566,7 @@ export default function Home() {
                 }
               </AnimatePresence>
             </div>
-          </MediaPlayer>
+          </MediaPlayer>}
           <style>{`
       video::-webkit-media-controls {
         display: none;
