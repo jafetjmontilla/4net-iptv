@@ -19,12 +19,14 @@
     "react-dom": "^18.2.0",
     "react-icons": "^5.0.1",
     "react-slider": "^2.0.6",
+    "ua-parser-js": "^1.0.37",
     "user-agent-data-types": "^0.4.2"
   },
   "devDependencies": {
     "@types/node": "^20.11.30",
     "@types/react": "^18.2.67",
     "@types/react-dom": "^18.2.22",
+    "@types/ua-parser-js": "^0.7.39",
     "autoprefixer": "^10",
     "eslint": "^8",
     "eslint-config-next": "13.5.6",

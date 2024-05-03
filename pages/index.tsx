@@ -1,14 +1,16 @@
 import '@vidstack/react/player/styles/base.css';
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react';
-import { isHLSProvider, MediaPlayer, MediaProvider, ScreenOrientationLockType, MediaCanPlayDetail, MediaCanPlayEvent, MediaProviderAdapter, MediaProviderChangeEvent, MediaPlayerInstance, Controls, VolumeSlider, MediaPlayerState } from '@vidstack/react';
+import { isHLSProvider, MediaPlayer, MediaProvider, ScreenOrientationLockType, MediaCanPlayDetail, MediaCanPlayEvent, MediaProviderAdapter, MediaProviderChangeEvent, MediaPlayerInstance, Controls, VolumeSlider, MediaPlayerState, useMediaStore } from '@vidstack/react';
 import { Channel, channelsList } from "../utils/channels"
 import { FaAngleDown, FaAngleUp, FaCompress, FaExpand, FaMinus, FaPlus, FaPowerOff } from "react-icons/fa6";
 import { FaVolumeDown, FaVolumeMute } from "react-icons/fa";
 import { AnimatePresence, motion } from "framer-motion";
 import { RiHomeLine } from 'react-icons/ri';
 import { PictureInPictureExitIcon, PictureInPictureIcon } from '@vidstack/react/icons';
+import { UAParser } from 'ua-parser-js';
 
+const parser = new UAParser();
 
 interface MyScreenOrientation extends ScreenOrientation {
   lock(orientation: ScreenOrientationLockType): Promise<void>;
@@ -46,6 +48,9 @@ export default function Home() {
   const [heightVideo, setHeightVideo] = useState<number | null>(null);
   const [keyPressed, setKeyPressed] = useState<string | null>(null);
   const [platform, setPlatfomr] = useState<string | null>(null);
+  const [platformOs, setPlatfomrOs] = useState<string | null>(null);
+  const [platformBrowser, setPlatfomrBrowser] = useState<string | null>(null);
+
   const [canFullScreen, setCanFullScreen] = useState<string>("no");
 
 
@@ -57,6 +62,7 @@ export default function Home() {
   }, [channel, volume])
 
   let player = useRef<MediaPlayerInstance>(null);
+  const { canFullscreen, fullscreen } = useMediaStore(player);
 
   let valirTimeout: any = null
 
@@ -64,7 +70,6 @@ export default function Home() {
     provider: MediaProviderAdapter | null,
     nativeEvent: MediaProviderChangeEvent,
   ) {
-    console.log("-------------------------------->", provider)
     // We can configure provider's here.
     if (isHLSProvider(provider)) {
       provider.config = {};
@@ -83,31 +88,15 @@ export default function Home() {
   }, [mute])
 
   useEffect(() => {
-    // if (window) {
-    //   console.log(new window.MediaMetadata())
-    // }
     document.addEventListener('mousemove', handleMouseLeave);
     document.addEventListener('click', handleMouseLeave);
     document.addEventListener("keydown", (e: KeyboardEvent) => { handleKeyDown(e) });
-    const video: HTMLVideoElement | null = document.querySelector("video")
-    if (video) {
-      video.addEventListener('volumechange', (e: any) => {
-        if (!video?.muted) {
-          console.log("aqui")
-          setVolume(e?.target?.volume)
-        }
-      });
-    }
 
     return () => {
       clearTimeout(valirTimeout);
       document.removeEventListener('mousemove', handleMouseLeave);
       document.removeEventListener('click', handleMouseLeave);
       document.removeEventListener("keydown", handleKeyDown);
-      const video: HTMLVideoElement | null = document?.querySelector("video")
-      if (video) {
-        video.removeEventListener('volumechange', (e: any) => { setVolume(e?.target?.volume) });
-      }
     };
   }, []);
 
@@ -115,14 +104,19 @@ export default function Home() {
     // Subscribe to state updates.
     return player.current!.subscribe((state: MediaPlayerState) => {
       setPlayerState(state)
+      if (!state.muted) {
+        setVolume(state.volume)
+      }
       // console.log(channel?.title)
-      // console.log('is volume?', '->', state.volume);
       // console.log('is muted?', '->', state.muted);
+      // console.log('is volume?', '->', state.volume);
       // console.log('is paused?', '->', state.paused);
       // console.log('is audio view?', '->', state.viewType);
       // console.log('state', '->', state.source);
     });
+
   }, []);
+
 
   useEffect(() => {
     let widthVideo = 1
@@ -139,34 +133,36 @@ export default function Home() {
   }, [screenSize])
 
   useEffect(() => {
-    console.log({ widthVideo })
-  }, [widthVideo])
-
-
-  useEffect(() => {
     const isPc = navigator?.userAgentData?.platform === "Windows"
-    setIsPc(isPc)
+    const userAgent = navigator.userAgent;
+    if (/Windows/.test(userAgent)) {
+      setPlatfomrOs("Windows")
+    }
+    if (/Mac OS X/.test(userAgent)) {
+      setPlatfomrOs("Mac")
+    }
+    if (/Linux/.test(userAgent)) {
+      setPlatfomrOs("Linux")
+    }
+    if (/Android/.test(userAgent)) {
+      setPlatfomrOs("Android")
+    }
+    if (/iOS/.test(userAgent)) {
+      setPlatfomrOs("iOS")
+    }
+
     setPlatfomr(`${navigator?.userAgentData?.platform} / mobile: ${navigator?.userAgentData?.mobile}`)
-    console.log(navigator)
     const c = navigator?.userAgent?.split(" ")
     setPlatfomr(`${c[0].split("/")[0]} / dis: ${c[1].split(" ")[0].slice(1)}`)
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
       setPlatfomr("mobile")
+      setIsPc(false)
     } else {
       setPlatfomr("NO mobile")
+      setIsPc(true)
     }
 
-    // // Opera 8.0+ 
-    // let isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-    // // Firefox 1.0+ 
-    // let isFirefox = typeof InstallTrigger !== 'undefined';
-    // // Safari 3.0+ 
-    // let isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
-
-    // isOpera && setPlatfomr("Opera")
-    // isFirefox && setPlatfomr("Firefox")
-    // isSafari && setPlatfomr("Safari")
-    // console.log({ isOpera, isFirefox, isSafari })
+    setPlatfomrBrowser(parser.getResult().browser.name ?? null)
 
     window.onbeforeunload = function (e) {
       alert("algo12")
@@ -193,6 +189,7 @@ export default function Home() {
       window.removeEventListener('fullscreenchange', handleFullChange);
     };
   }, []);
+
 
   const handleKeyDown = (e: KeyboardEvent) => {
     e?.defaultPrevented
@@ -254,13 +251,18 @@ export default function Home() {
         document?.exitFullscreen();
       }
     } else {
+      if (!container.hasAttribute('webkit-playsinline')) {
+        const webkitPlaysinlineAttribute = document.createAttribute('webkit-playsinline');
+        container.setAttributeNode(webkitPlaysinlineAttribute);
+      }
+      setCanFullScreen(container?.mozRequestFullScreen?.toString())
       if (container?.requestFullscreen) {
         setFullScreen(true)
         container?.requestFullscreen({ navigationUI: "hide" });
         (screen.orientation as MyScreenOrientation).lock('landscape')
           .then()
           .catch((error: any) =>
-            console.log(10004, error)
+            console.log(10003, error)
           )
         const video: HTMLVideoElement | null = document.querySelector("video")
         if (document?.pictureInPictureElement === video) {
@@ -349,14 +351,13 @@ export default function Home() {
         if (video) {
           setTimeout(() => {
             //click en volver a la pestaña
-            if (!video.paused) {
+            if (!video?.paused) {
               if (isPc) {
                 setShowPIP(false)
               }
               if (!isPc) {
                 setShowPIP(false)
                 setWaitingConfirmation(true)
-                console.log("primero pausar y despues haciendo click en el div: darle play quitar div superpuesto, y espandir a pantalla completa ")
               }
             } else {
               //cerrado en la x del pip y click en volver a la pestaña estando pausado
@@ -378,9 +379,9 @@ export default function Home() {
   }, [triggerClosePIP])
   const handlePIP = async () => {
     const video: HTMLVideoElement | null = document.querySelector("video")
-    if (video && !showPIP) {
+    if (video && !showPIP && video?.requestPictureInPicture) {
       setShowPIP(true)
-      await video.requestPictureInPicture();
+      await video?.requestPictureInPicture();
       video.addEventListener('leavepictureinpicture', () => { setTriggerClosePIP(new Date().getTime()) });
       return
     }
@@ -405,7 +406,6 @@ export default function Home() {
       if (idx === channelsList.length) {
         idx = 0
       }
-      console.log(100014, { idx })
       setChannel(channelsList[idx])
     } catch (error) {
       console.log(1001141, error)
@@ -466,7 +466,7 @@ export default function Home() {
             // artwork={[]}
             // album=""
             //title={channel?.title}
-            onSourceChange={(e) => console.log("||||||||||||||||||||||||||===================>", e)}
+            onSourceChange={(e) => console.log("cambio de source src", e)}
             onProviderChange={onProviderChange}
             // onError={() => { alert("error1") }}
             onCanPlay={onCanPlay}>
@@ -474,16 +474,18 @@ export default function Home() {
             <div className='fixed top-6 left-6 z-10 bg-red-500 w-64 h-12 flex flex-col justify-center items-center'>
               <span className='text-white font-extrabold'>{keyPressed}</span>
               <span className='text-white font-extrabold'>{platform}</span>
+              <span className='text-white font-extrabold'>Os: {platformOs}</span>
+              <span className='text-white font-extrabold'>Browser: {platformBrowser}</span>
               <span className='text-white font-extrabold'>{channel?.title}</span>
-              <span className='text-white font-extrabold'>volume: {volume}</span>
-              <span className='text-white font-extrabold'>canfullScreen: {canFullScreen}</span>
+              {/* <span className='text-white font-extrabold'>volume: {volume}</span>
+              <span className='text-white font-extrabold'>canfullScreen: {canFullScreen}</span> */}
             </div>
             {/* <div className='fixed right-6 bottom-6 z-10 bg-red-500 w-64 flex flex-col justify-center items-center'>
               <span className='text-white font-extrabold'>{keyPressed}</span>
               <span className='text-white font-extrabold'>{platform}</span>
             </div> */}
 
-            <MediaProvider onError={(error) => { console.log(545410, error) }} />
+            <MediaProvider onError={(error) => { console.log(545410, "error", error) }} />
             <div className={`${showVideo ? "fixed" : "absolute"} inset-0 z-10 flex h-full w-full flex-col justify-center items-end *-translate-x-7 md:-translate-x-20`}>
               <AnimatePresence >
                 {showControl &&
@@ -535,7 +537,7 @@ export default function Home() {
                                   <div className="w-[60px] h-[60px]  rounded-full border-4 border-white flex justify-center items-center cursor-pointer" ><RiHomeLine className="w-8 h-8 hover:scale-110" /></div>
                                 </div>
                                 <div className="w-1/3 h-full flex flex-col items-center justify-between py-8">
-                                  {isPc
+                                  {true
                                     ? <div onClick={() => { handleFullScreen() }} className="w-[60px] h-[60px]  rounded-full border-4 border-white flex justify-center items-center cursor-pointer"  >
                                       {fullScreen
                                         ? <FaCompress className="w-8 h-8 hover:scale-110" />
