@@ -10,24 +10,25 @@ export interface Channel {
 
 
 export const channelsList: Channel[] = [
-  {
-    numberChannel: 100,
-    title: "intro",
-    logo: "/channels/antv.webp",
-    showMenu: true,
-    src: "/channels/intro.mp4"
-  },
+  // {
+  //   numberChannel: 100,
+  //   title: "intro",
+  //   logo: "/channels/antv.webp",
+  //   showMenu: true,
+  //   src: "/channels/intro.mp4"
+  // },
+
   {
     numberChannel: 101,
-    title: "antv",
-    logo: "/channels/antv.webp",
-    src: "https://airtek.tv/livestream/ANTV.m3u8"
-  },
-  {
-    numberChannel: 102,
     title: "canal 11",
     logo: "/channels/canal11.webp",
     src: "https://airtek.tv/livestream/CANAL_11.m3u8"//contactar
+  },
+    {
+    numberChannel: 102,
+    title: "antv",
+    logo: "/channels/antv.webp",
+    src: "https://airtek.tv/livestream/ANTV.m3u8"
   },
   {
     numberChannel: 103,
@@ -98,7 +99,7 @@ src: "https://cdnesmain.telesur.ultrabase.net/mbliveMain/hd/chunklist.m3u8"
     //src: "https://airtek.tv/livestream/Venevision.m3u8"
   },
   {
-    numberChannel: 1013,
+    numberChannel: 113,
     title: "vive",
     logo: "/channels/vivetv.webp",
     src: "https://airtek.tv/livestream/VIVE_TV.m3u8"

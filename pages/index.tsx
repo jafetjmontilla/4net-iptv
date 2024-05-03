@@ -46,6 +46,7 @@ export default function Home() {
   const [heightVideo, setHeightVideo] = useState<number | null>(null);
   const [keyPressed, setKeyPressed] = useState<string | null>(null);
   const [platform, setPlatfomr] = useState<string | null>(null);
+  const [canFullScreen, setCanFullScreen] = useState<string>("no");
 
 
   useEffect(() => {
@@ -90,7 +91,12 @@ export default function Home() {
     document.addEventListener("keydown", (e: KeyboardEvent) => { handleKeyDown(e) });
     const video: HTMLVideoElement | null = document.querySelector("video")
     if (video) {
-      video.addEventListener('volumechange', (e: any) => { setVolume(e?.target?.volume) });
+      video.addEventListener('volumechange', (e: any) => {
+        if (!video?.muted) {
+          console.log("aqui")
+          setVolume(e?.target?.volume)
+        }
+      });
     }
 
     return () => {
@@ -109,12 +115,12 @@ export default function Home() {
     // Subscribe to state updates.
     return player.current!.subscribe((state: MediaPlayerState) => {
       setPlayerState(state)
-      console.log(channel?.title)
-      console.log('is volume?', '->', state.volume);
-      console.log('is muted?', '->', state.muted);
-      console.log('is paused?', '->', state.paused);
-      console.log('is audio view?', '->', state.viewType);
-      console.log('state', '->', state.source);
+      // console.log(channel?.title)
+      // console.log('is volume?', '->', state.volume);
+      // console.log('is muted?', '->', state.muted);
+      // console.log('is paused?', '->', state.paused);
+      // console.log('is audio view?', '->', state.viewType);
+      // console.log('state', '->', state.source);
     });
   }, []);
 
@@ -150,19 +156,18 @@ export default function Home() {
       setPlatfomr("NO mobile")
     }
 
-    // Opera 8.0+ 
-    let isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-    // Firefox 1.0+ 
-    let isFirefox = typeof InstallTrigger !== 'undefined';
-    // Safari 3.0+ 
-    let isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+    // // Opera 8.0+ 
+    // let isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+    // // Firefox 1.0+ 
+    // let isFirefox = typeof InstallTrigger !== 'undefined';
+    // // Safari 3.0+ 
+    // let isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
 
-    isOpera && setPlatfomr("Opera")
-    isFirefox && setPlatfomr("Firefox")
-    isSafari && setPlatfomr("Safari")
+    // isOpera && setPlatfomr("Opera")
+    // isFirefox && setPlatfomr("Firefox")
+    // isSafari && setPlatfomr("Safari")
+    // console.log({ isOpera, isFirefox, isSafari })
 
-
-    console.log({ isOpera, isFirefox, isSafari })
     window.onbeforeunload = function (e) {
       alert("algo12")
       console.log("Evento detectado: el usuario hizo clic en el botón de volver.");
@@ -280,15 +285,16 @@ export default function Home() {
     setClosing(false)
     setTimeout(() => {
       setShowVideo(true)
-      const f1 = channelsList.findIndex(elem => elem?.numberChannel === dataStorage?.numberChannel ? dataStorage?.numberChannel : 101)
-      setChannel(channelsList[f1])
+      const channel = channelsList.find(elem => elem.numberChannel === dataStorage.numberChannel)
+      setChannel(channel ? channel : channelsList[0])
       setTimeout(() => {
         const video: HTMLVideoElement | null = document.querySelector("video")
         const container: any | null = document.getElementById("mediaplayer")
         if (video) {
           video.muted = false
-          video.volume = dataStorage?.volume ?? 0.1
-          setVolume(video.volume)
+          setMute(false)
+          video.volume = dataStorage?.volume ?? 0.2
+          setVolume(dataStorage?.volume ?? 0.2)
           if (container?.requestFullscreen && !isPc) {
             container?.requestFullscreen({ navigationUI: "hide" });
             (screen.orientation as MyScreenOrientation).lock('landscape')
@@ -303,16 +309,15 @@ export default function Home() {
   }
 
   const volumeChange = (value: number) => {
-    const video: HTMLVideoElement | null = document.querySelector("video")
-    if (video) {
-      let volumeNew = video.volume + value
-      if (volumeNew < 0) volumeNew = 0
-      if (volumeNew > 1) volumeNew = 1
-      if (volumeNew >= 0 && volumeNew <= 1) {
-        video.volume = volumeNew
-        setVolume(video.volume)
-        setMute(false)
-      }
+    if (mute) {
+      setMute(false)
+      return
+    }
+    let volumeNew = Math.floor((volume + value) * 100) / 100
+    if (volumeNew < 0) volumeNew = 0
+    if (volumeNew > 1) volumeNew = 1
+    if (volumeNew >= 0 && volumeNew <= 1) {
+      setVolume(volumeNew)
     }
   }
 
@@ -394,11 +399,11 @@ export default function Home() {
     try {
       let idx = channelsList.findIndex(elem => elem.numberChannel === channel?.numberChannel)
       idx = idx + action
-      if (idx === 0) {
+      if (idx < 0) {
         idx = channelsList.length - 1
       }
       if (idx === channelsList.length) {
-        idx = 1
+        idx = 0
       }
       console.log(100014, { idx })
       setChannel(channelsList[idx])
@@ -450,7 +455,7 @@ export default function Home() {
             id='mediaplayer'
             muted={!showVideo}
             autoPlay={true}
-            volume={0.1}
+            volume={mute ? 0 : volume}
             className={`aspect-video bg-black text-white font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4`}
             // title="Sprite Fight"
             src={[{ src: channel?.src }]}
@@ -458,8 +463,8 @@ export default function Home() {
             playsInline={true}
             artist=""
             title=""
-            artwork={[]}
-            album=""
+            // artwork={[]}
+            // album=""
             //title={channel?.title}
             onSourceChange={(e) => console.log("||||||||||||||||||||||||||===================>", e)}
             onProviderChange={onProviderChange}
@@ -470,6 +475,8 @@ export default function Home() {
               <span className='text-white font-extrabold'>{keyPressed}</span>
               <span className='text-white font-extrabold'>{platform}</span>
               <span className='text-white font-extrabold'>{channel?.title}</span>
+              <span className='text-white font-extrabold'>volume: {volume}</span>
+              <span className='text-white font-extrabold'>canfullScreen: {canFullScreen}</span>
             </div>
             {/* <div className='fixed right-6 bottom-6 z-10 bg-red-500 w-64 flex flex-col justify-center items-center'>
               <span className='text-white font-extrabold'>{keyPressed}</span>
@@ -477,7 +484,7 @@ export default function Home() {
             </div> */}
 
             <MediaProvider onError={(error) => { console.log(545410, error) }} />
-            <div className={`absolute inset-0 z-10 flex h-full w-full flex-col justify-center items-end -translate-x-7 md:-translate-x-20`}>
+            <div className={`${showVideo ? "fixed" : "absolute"} inset-0 z-10 flex h-full w-full flex-col justify-center items-end *-translate-x-7 md:-translate-x-20`}>
               <AnimatePresence >
                 {showControl &&
                   <motion.div
