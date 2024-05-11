@@ -1,4 +1,9 @@
 import '@vidstack/react/player/styles/base.css';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Autoplay, Navigation, FreeMode, Scrollbar, Mousewheel } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react';
 import { isHLSProvider, MediaPlayer, MediaProvider, ScreenOrientationLockType, MediaCanPlayDetail, MediaCanPlayEvent, MediaProviderAdapter, MediaProviderChangeEvent, MediaPlayerInstance, Controls, VolumeSlider, MediaPlayerState, useMediaStore } from '@vidstack/react';
@@ -9,6 +14,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { RiHomeLine } from 'react-icons/ri';
 import { PictureInPictureExitIcon, PictureInPictureIcon } from '@vidstack/react/icons';
 import { UAParser } from 'ua-parser-js';
+// import { ChannelSelector } from '../Components/ChannelSelector'
+import { IoClose } from 'react-icons/io5';
 
 const parser = new UAParser();
 
@@ -30,7 +37,9 @@ export default function Home() {
   const [showVideo, setShowVideo] = useState<boolean>(false)
   const [channel, setChannel] = useState<Channel>(channelsList[1])
   const [showControl, setShowControl] = useState<boolean>(false);
+  const [showChannels, setShowChannels] = useState<boolean>(false);
   const [closing, setClosing] = useState<boolean>(false);
+  const [slideChannel, setSlideChannel] = useState<number>(0);
   const [isPc, setIsPc] = useState<boolean>(false);
   const [mute, setMute] = useState<boolean>(false);
   const [volume, setVolume] = useState<number>(0.1);
@@ -183,6 +192,7 @@ export default function Home() {
     };
     // window.addEventListener('popstate', handlePopstate);
     window.addEventListener('fullscreenchange', handleFullChange);
+    handleResize()
     window.addEventListener('resize', handleResize);
     return () => {
       // window.removeEventListener('popstate', handlePopstate);
@@ -282,13 +292,20 @@ export default function Home() {
     }
   }, [])
 
+  useEffect(() => {
+    console.log(slideChannel)
+  }, [slideChannel])
+
+
   const handleSwithOn = () => {
     let dataStorage: DataStoragePros = JSON.parse(localStorage.getItem("Tv") ?? "{}");
     setClosing(false)
     setTimeout(() => {
+      console.log("aqui")
       setShowVideo(true)
-      const channel = channelsList.find(elem => elem.numberChannel === dataStorage.numberChannel)
-      setChannel(channel ? channel : channelsList[0])
+      const f1 = channelsList.findIndex(elem => elem.numberChannel === dataStorage.numberChannel)
+      setChannel(f1 > -1 ? channelsList[f1] : channelsList[0])
+      setSlideChannel(f1)
       setTimeout(() => {
         const video: HTMLVideoElement | null = document.querySelector("video")
         const container: any | null = document.getElementById("mediaplayer")
@@ -412,6 +429,18 @@ export default function Home() {
     }
   }
 
+  const handleShowChannels = async () => {
+    try {
+      console.log("aqui")
+    } catch (error) {
+      console.log(1001142, error)
+    }
+  }
+  const loaderLazy = ({ src }: any) => {
+    console.log(src)
+    return src
+  }
+
   return (
     <main
       onClick={() => {
@@ -429,8 +458,9 @@ export default function Home() {
         >
           <div className='flex flex-col items-center '>
             <div className='items-center'>
-              <div onClick={handleSwithOn} className="inline-flex cursor-pointer p-8 bg-slate-900 rounded-full hover:scale-110 hover:bg-slate-800">
-                <FaPowerOff className='w-20 h-20 text-white ' />
+              <div onClick={handleSwithOn} className="inline-flex cursor-pointer p-8 bg-slate-900 rounded-full hover:scale-110 hover:bg-slate-800 relative justify-center">
+                <FaPowerOff className='w-20 h-20 text-white' />
+                <span className='absolute bottom-0 -translate-y-2 text-white text-xl md:text-lg'>Encender</span>
               </div>
             </div>
             <Image style={{ objectFit: 'cover' }} height={40} width={300} alt={channel?.title} src={"/4netBlancoGradient.png"} />
@@ -458,7 +488,7 @@ export default function Home() {
             volume={mute ? 0 : volume}
             className={`aspect-video bg-black text-white font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4`}
             // title="Sprite Fight"
-            src={[{ src: channel?.src }]}
+            src={[{ src: channel?.src, type: "video/vimeo" }]}
             crossOrigin={true}
             playsInline={true}
             artist=""
@@ -484,8 +514,85 @@ export default function Home() {
               <span className='text-white font-extrabold'>{keyPressed}</span>
               <span className='text-white font-extrabold'>{platform}</span>
             </div> */}
-
             <MediaProvider onError={(error) => { console.log(545410, "error", error) }} />
+            <AnimatePresence >
+              {showChannels &&
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1, transition: { duration: 0.4 } }}
+                  exit={{ opacity: 0, transition: { delay: 0, duration: 0.3 } }}
+                  className='h-[100vh] w-[178px] md:w-[281px] bg-black fixed top-0 right-0 -translate-x-[54px] md:-translate-x-20 z-20 shadow-xl shadow-black'
+                >
+                  <div onClick={() => { setShowChannels(false) }} className='w-10 h-10 md:w-12 md:h-12 rounded-full bg-red-500 right-0 opacity-50 absolute translate-x-12 translate-y-8 md:translate-x-14 md:translate-y-20 text-black flex justify-center items-center cursor-pointer hover:scale-110'>
+                    <IoClose className='w-8 h-8 text-black' />
+                  </div>
+                  <div className='w-full h-14 md:h-20 lg:h-32 bg-gradient-opacity absolute z-10 top-0' />
+                  <div className='w-full h-14 md:h-20 lg:h-32 bg-gradient-opacity absolute z-10 bottom-0 rotate-180' />
+                  {/* 
+                  Infinite loop
+                  vertical
+                  Slides per view
+                   */}
+                  <div className="w-[100%] h-[100%] relative">
+                    <div className='w-[100%] h-[100%] cursor-pointer '>
+                      <Swiper
+                        direction={'vertical'}
+                        initialSlide={slideChannel}
+                        slidesPerView={screenSize
+                          ? screenSize?.w < 768
+                            ? screenSize.h / 110
+                            : screenSize.h / 145
+                          : 0
+                        }
+                        spaceBetween={10}
+                        loop={false}
+                        centeredSlides={true}
+                        // pagination={{
+                        //   clickable: true,
+                        // }}
+                        modules={[FreeMode, Scrollbar, Mousewheel]}
+                        className=""
+
+                        freeMode={true}
+                        scrollbar={true}
+                        mousewheel={true}
+                      >
+                        {channelsList?.map((item, idx) => (
+                          <SwiperSlide key={idx} onClick={() => {
+                            setChannel(item)
+                            setSlideChannel(idx)
+                          }} >
+                            <div className={`${channel.numberChannel === item.numberChannel ? "bg-blue-800 scale-[107%]" : "bg-slate-800"} w-full h-full flex justify-center relative items-center p-2 mx-3 rounded-md transition ease-in-out delay-100 duration-300 hover:scale-110`}>
+                              <div className='absolute left-4 top-2'>{item.title}</div>
+                              <div className='bg-blue-400* w-32 h-16 md:w-40 md:h-20 relative translate-y-2'>
+                                <Image
+                                  loader={({ src }: any) => {
+                                    try {
+                                      return src
+                                    } catch (error) {
+                                      console.log(error)
+                                    }
+                                  }}
+                                  fill
+                                  src={item.logo}
+                                  alt={item.title}
+                                  objectFit="contain"
+                                />
+                              </div>
+                            </div>
+                            {/* <Category title={item?.title} route={item?.slug} /> */}
+                          </SwiperSlide>
+                        ))}
+                      </Swiper>
+                    </div>
+                  </div>
+
+
+
+
+                </motion.div>
+              }
+            </AnimatePresence>
             <div className={`${showVideo ? "fixed" : "absolute"} inset-0 z-10 flex h-full w-full flex-col justify-center items-end *-translate-x-7 md:-translate-x-20`}>
               <AnimatePresence >
                 {showControl &&
@@ -501,6 +608,7 @@ export default function Home() {
                           animate={{ opacity: 0.8, transition: { duration: 0.4 } }}
                           exit={{ opacity: 0, transition: { duration: 0.15 } }}
                         >
+
                           <div className={`bg-black p-2 rounded-3xl *opacity-80 scale-[65%] lg:scale-100`}>
                             <div className="w-[265px] h-[478px] rounded-3xl border-white border-8 flex flex-col" >
                               <div className="w-full h-[85%] flex">
@@ -534,7 +642,9 @@ export default function Home() {
                                   </div>
                                 </div>
                                 <div className="w-1/3 h-full flex justify-center items-center">
-                                  <div className="w-[60px] h-[60px]  rounded-full border-4 border-white flex justify-center items-center cursor-pointer" ><RiHomeLine className="w-8 h-8 hover:scale-110" /></div>
+                                  <div onClick={() => { setShowChannels(true) }} className="w-[60px] h-[60px]  rounded-full border-4 border-white flex justify-center items-center cursor-pointer" >
+                                    <RiHomeLine className="w-8 h-8 hover:scale-110" />
+                                  </div>
                                 </div>
                                 <div className="w-1/3 h-full flex flex-col items-center justify-between py-8">
                                   {true
@@ -585,6 +695,28 @@ export default function Home() {
       }
       video::-webkit-media-controls-overlay-play-button {
         display: none !important;
+      }
+      .swiper {
+        width: 100%;
+        height: 100%;
+      }
+
+      .swiper-slide {
+        text-align: center;
+        font-size: 18px;
+        background: #000000;
+
+        /* Center slide text vertically */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .swiper-slide img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
       `}</style>
         </motion.div>

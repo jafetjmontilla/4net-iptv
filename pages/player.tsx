@@ -110,7 +110,7 @@ export default function Player() {
           autoPlay={true}
           className="aspect-video bg-slate-900 text-white font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
           // title="Sprite Fight"
-          src={[{ src: 'https://airtek.tv/livestream/ANTV.m3u8' }]}
+          src={[{ src: 'https://airtek.tv/livestream/ANTV.m3u8', type: "video/mp4" }]}
           crossOrigin={true}
           playsInline={true}
 
