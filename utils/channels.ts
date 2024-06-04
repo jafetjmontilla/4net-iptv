@@ -1,4 +1,4 @@
-import { _ } from "@vidstack/react/dist/types/vidstack-react.js"
+// import { _ } from "@vidstack/react/dist/types/vidstack-react.js"
 
 
 export interface Channel {
@@ -10,385 +10,962 @@ export interface Channel {
   id: string
   country: string
   description?: string
+  groupTitle?: String,
+  info?: String,
+  status?: String
 }
 
 
 export const channelsList: Channel[] = [
   {
+    title: "FMH movies",
+    country: 've',
+    logo: "https://www.fmh.la/images/team/logo_movies.png",
+    description: "General",
+    src: "http://138.255.102.178:25461/live/4EVERMOVIES/aZqx2XNAtq/25.m3u8",
+    groupTitle: "General",
+    info: "1080p",
+    id: "FMH movies",
+    numberChannel: 201,
+    status: "test",
+  },
+  {
+    title: "FMH family",
+    country: 've',
+    logo: "https://www.fmh.la/images/team/logo_family.png",
+    description: "General",
+    src: "http://138.255.102.178:25461/live/4EVERFAMILY/7WxAVh2aKg/26.m3u8",
+    groupTitle: "General",
+    info: "1080p",
+    id: "FMH family",
+    numberChannel: 202,
+    status: "test",
+  },
+  {
+    title: "FMH kids",
+    country: 've',
+    logo: "https://www.fmh.la/images/team/logo_kids.png",
+    description: "General",
+    src: "http://138.255.102.178:25461/live/4EVERKIDS/uSVBzHmzeA/27.m3u8",
+    groupTitle: "General",
+    info: "1080p",
+    id: "FMH kids",
+    numberChannel: 203,
+    status: "test",
+  },
+  {
+    title: "Atlas",
+    country: 've',
+    logo: "https://www.fmh.la/images/team/logo_atlas.png",
+    description: "General",
+    src: "http://138.255.102.178:25461/live/4EVERATLAS/9u7FqrQUQn/21.m3u8",
+    groupTitle: "General",
+    info: "1080p",
+    id: "Atlas",
+    numberChannel: 204,
+    status: "test",
+  },
+  {
+    title: "Animotion",
+    country: 've',
+    logo: "https://www.fmh.la/images/team/logo_animotion2.png",
+    description: "General",
+    src: "http://138.255.102.178:25461/live/4EVERANIMOTION/rP7LF53b85/30.m3u8",
+    groupTitle: "General",
+    info: "1080p",
+    id: "Animotion",
+    numberChannel: 205,
+    status: "test",
+  },
+  {
+    title: "Kizzi",
+    country: 've',
+    logo: "https://www.fmh.la/images/team/logo_kizzi.png",
+    description: "General",
+    src: "http://138.255.102.178:25461/live/4EVERKIZZI/Rg2zG3cj2Y/28.m3u8",
+    groupTitle: "General",
+    info: "1080p",
+    id: "Kizzi",
+    numberChannel: 206,
+    status: "test",
+  },
+  {
+    title: "Rewind",
+    country: 've',
+    logo: "https://www.fmh.la/images/team/logo_rewind.png",
+    description: "General",
+    src: "http://138.255.102.178:25461/live/4EVERREWIND/YeRCyrbCF9/29.m3u8",
+    groupTitle: "General",
+    info: "1080p",
+    id: "Rewind",
+    numberChannel: 207,
+    status: "test",
+  },
+  {
     title: 'AguacateTV',
+    groupTitle: 'Entertainment',
+    info: '1080p',
     id: 'AguacateTV.ve',
     country: 've',
     logo: 'https://i.ibb.co/wpWBsgf/IMG-20230705-154622.jpg',
     description: 'Entertainment',
-    src: 'https://test.4net.com.ve/hls/101.m3u8',
-    numberChannel: 101
+    status: 'test',
+    src: 'https://streamtv.intervenhosting.net:3040/hybrid/play.m3u8',
+    numberChannel: 301
   },
   {
     title: 'AnzoateguiTV',
+    groupTitle: 'General',
+    info: '360p',
     id: 'AnzoateguiTV.ve',
     country: 've',
     logo: 'https://i.imgur.com/SLqrEOz.png',
     description: 'General',
-    src: 'https://test.4net.com.ve/hls/102.m3u8',
-    numberChannel: 102
-  },
-  {
-    title: 'CanalI',
-    id: 'CanalI.ve',
-    country: 've',
-    logo: 'https://i.imgur.com/vKfOavW.png',
-    description: 'News',
-    src: 'https://test.4net.com.ve/hls/109.m3u8',
-    numberChannel: 109
-  },
-  {
-    title: 'Canal21Tachira',
-    id: 'Canal21Tachira.ve',
-    country: 've',
-    logo: 'https://i.imgur.com/7Tb7CF4.jpg',
-    description: 'General',
-    src: 'https://test.4net.com.ve/hls/106.m3u8',
-    numberChannel: 106
+    status: 'test',
+    src: 'https://vcp2.myplaytv.com/anzoateguitv/anzoateguitv/playlist.m3u8',
+    numberChannel: 302
   },
   {
     title: 'AudazTV',
+    groupTitle: 'Religious',
+    info: '432p',
     id: 'AudazTV.ve',
     country: 've',
     logo: 'https://i.imgur.com/QtCgtZq.jpg',
     description: 'Religious',
-    src: 'https://test.4net.com.ve/hls/103.m3u8',
-    numberChannel: 103
+    status: 'test',
+    src: 'https://cloud2.streaminglivehd.com:1936/8264/8264/playlist.m3u8',
+    numberChannel: 303
+  },
+  {
+    title: 'AvilaTV',
+    groupTitle: 'General',
+    info: 'Caracas',
+    id: 'AvilaTV.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/hL2R9K1.png',
+    description: 'General',
+    status: 'test',
+    src: 'https://cloud.odysee.live/content/9fc00ad00fd8b0f08ab11f2324c82ffd713c3cb6/master.m3u8',
+    numberChannel: 304
+  },
+  {
+    title: 'BTATV',
+    groupTitle: 'Music',
+    info: '720p',
+    id: 'BTATV.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/vygOosC.png',
+    description: 'Music',
+    status: 'test',
+    src: 'https://cloud.fastchannel.es/manifiest/hls/prog9/btatv.m3u8',
+    numberChannel: 305
+  },
+  {
+    title: 'Canal21Tachira',
+    groupTitle: 'General',
+    info: '360p',
+    id: 'Canal21Tachira.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/7Tb7CF4.jpg',
+    description: 'General',
+    status: 'test',
+    src: 'https://stmv2.voxtvhd.com.br/canal21/canal21/playlist.m3u8',
+    numberChannel: 306
   },
   {
     title: 'CanalCulturaVenezuela',
+    groupTitle: 'Culture;Music',
+    info: '1080p [Not 24/7]',
     id: 'CanalCulturaVenezuela.ve',
     country: 've',
     logo: 'https://culturavenezuela.com/wp-content/uploads/2021/07/cropped-Cierre-Alfa-SE.00_00_04_25.Imagen-fija003-150x150.png',
     description: 'Culture;Music',
-    src: 'https://test.4net.com.ve/hls/107.m3u8',
-    numberChannel: 107
+    status: 'test',
+    src: 'https://ythls.armelin.one/channel/UCMPPdsYmf-V6jukDtIfpM_A.m3u8',
+    numberChannel: 307
+  },
+  {
+    title: 'CanalDiplomatico',
+    groupTitle: 'Culture',
+    info: '720p [Not 24/7]',
+    id: 'CanalDiplomatico.ve',
+    country: 've',
+    logo: 'https://i.ibb.co/34vsSzS/1439-Canal-Diplomatico.png',
+    description: 'Culture',
+    status: 'test',
+    src: 'https://vcp.myplaytv.com/canaldiplomatico/canaldiplomatico/playlist.m3u8',
+    numberChannel: 308
+  },
+  {
+    title: 'CanalI',
+    groupTitle: 'News',
+    info: '720p [Not 24/7]',
+    id: 'CanalI.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/vKfOavW.png',
+    description: 'News',
+    status: 'test',
+    src: 'https://vcp.myplaytv.com/canali/canali/playlist.m3u8',
+    numberChannel: 309
+  },
+  {
+    title: 'CanalNubehTV',
+    groupTitle: 'General',
+    info: '720p',
+    id: 'CanalNubehTV.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/qjMxX1d.png',
+    description: 'General',
+    status: 'test',
+    src: 'https://vcp.myplaytv.com/nubehtv/nubehtv/playlist.m3u8',
+    numberChannel: 310
+  },
+  {
+    title: 'CantinaTV',
+    groupTitle: 'Music',
+    info: '1080p',
+    id: 'CantinaTV.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/JWMk2fP.png',
+    description: 'Music',
+    status: 'test',
+    src: 'https://vcp.myplaytv.com/cantinatv/cantinatv/playlist.m3u8',
+    numberChannel: 311
   },
   {
     title: 'CatatumboTV',
+    groupTitle: 'General',
+    info: '406p',
     id: 'CatatumboTV.ve',
     country: 've',
     logo: 'https://i.imgur.com/LBI2la0.png',
     description: 'General',
-    src: 'https://test.4net.com.ve/hls/112.m3u8',
-    numberChannel: 112
+    status: 'test',
+    src: 'https://cloud.fastchannel.es/manifiest/hls/prog9/catatumbotv.m3u8',
+    numberChannel: 312
   },
   {
     title: 'ChivacoaTVInternacional',
+    groupTitle: 'General',
+    info: '720p [Not 24/7]',
     id: 'ChivacoaTVInternacional.ve',
     country: 've',
     logo: 'https://i.imgur.com/9rbwZFY.png',
     description: 'General',
-    src: 'https://test.4net.com.ve/hls/113.m3u8',
-    numberChannel: 113
+    status: 'test',
+    src: 'https://vdo1.panelstreaming.live:3875/live/guarotvlive.m3u8',
+    numberChannel: 313
+  },
+  {
+    title: 'Colombeia',
+    groupTitle: 'Education',
+    info: '1080p [Not 24/7]',
+    id: 'Colombeia.ve',
+    country: 've',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/3/38/Logo_Colombeia.png',
+    description: 'Education',
+    status: 'test',
+    src: 'https://cloud.odysee.live/content/ba3d31fdf59976d63976e5a2173df36b442104ba/master.m3u8',
+    numberChannel: 314
+  },
+  {
+    title: 'ConCienciaTV',
+    groupTitle: 'Science',
+    info: '1080p [Not 24/7]',
+    id: 'ConCienciaTV.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/kzOOz8R.png',
+    description: 'Science',
+    status: 'test',
+    src: 'https://cloud.odysee.live/content/06843a89c55eb976f980641de0844259c76eca33/master.m3u8',
+    numberChannel: 315
   },
   {
     title: 'eSportsMaxTV',
+    groupTitle: 'Animation',
+    info: '480p [Not 24/7]',
     id: 'eSportsMaxTV.ve',
     country: 've',
     logo: 'https://i.imgur.com/OprRgQN.png',
     description: 'Animation',
-    src: 'https://test.4net.com.ve/hls/116.m3u8',
-    numberChannel: 116
+    status: 'test',
+    src: 'http://vcpar.myplaytv.com/esportsmax/live/playlist.m3u8',
+    numberChannel: 316
   },
   {
     title: 'EXCTV',
+    groupTitle: 'Science',
+    info: '720p [Not 24/7]',
     id: 'EXCTV.ve',
     country: 've',
     logo: 'https://i.imgur.com/Znd1Ml9.png',
     description: 'Science',
-    src: 'https://test.4net.com.ve/hls/117.m3u8',
-    numberChannel: 117
+    status: 'test',
+    src: 'https://vcp.myplaytv.com/explosioncreativa/explosioncreativa/playlist.m3u8',
+    numberChannel: 317
   },
   {
     title: 'FeTelevision',
+    groupTitle: 'Religious',
+    info: '360p',
     id: 'FeTelevision.ve',
     country: 've',
     logo: 'https://i.imgur.com/hLorJRD.jpg',
     description: 'Religious',
-    src: 'https://test.4net.com.ve/hls/118.m3u8',
-    numberChannel: 118
+    status: 'test',
+    src: 'https://stream.oursnetworktv.com/latin/Canal75/playlist.m3u8',
+    numberChannel: 318
+  },
+  {
+    title: 'FiestaMax',
+    groupTitle: 'Music',
+    info: '720p',
+    id: 'FiestaMax.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/8am0c5E.png',
+    description: 'Music',
+    status: 'test',
+    src: 'http://vcpar.myplaytv.com/fiestamax/live/playlist.m3u8',
+    numberChannel: 319
   },
   {
     title: 'Globovision',
+    groupTitle: 'General',
+    info: '1080p [Not 24/7]',
     id: 'Globovision.ve',
     country: 've',
     logo: 'https://i.imgur.com/v6nRdxQ.png',
     description: 'General',
-    src: 'https://test.4net.com.ve/hls/120.m3u8',
-    numberChannel: 120
+    status: 'test',
+    src: 'https://ythls.armelin.one/channel/UCfJtBtmhnIyfUB6RqXeImMw.m3u8',
+    numberChannel: 320
   },
   {
     title: 'GlowTV',
+    groupTitle: 'Undefined',
+    info: '720p [Not 24/7]',
     id: 'GlowTV.ve',
     country: 've',
     logo: 'https://i.ibb.co/fN0Tsr2/glowtv2.png',
-    src: 'https://test.4net.com.ve/hls/121.m3u8',
-    numberChannel: 121
+    description: undefined,
+    status: 'test',
+    src: 'https://vcp7.myplaytv.com/glowtv/glowtv/playlist.m3u8',
+    numberChannel: 321
   },
   {
     title: 'GuaroTV',
+    groupTitle: 'Entertainment',
+    info: '1080p',
     id: 'GuaroTV.ve',
     country: 've',
     logo: 'https://i.ibb.co/LN92K6h/IMG-20230705-154347.jpg',
     description: 'Entertainment',
-    src: 'https://test.4net.com.ve/hls/122.m3u8',
-    numberChannel: 122
+    status: 'test',
+    src: 'https://streamtv.intervenhosting.net:3061/hybrid/play.m3u8',
+    numberChannel: 322
+  },
+  {
+    title: 'HumorMax',
+    groupTitle: 'Comedy',
+    info: '720p [Not 24/7]',
+    id: 'HumorMax.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/bFUZwJ0.png',
+    description: 'Comedy',
+    status: 'test',
+    src: 'http://vcpar.myplaytv.com/humormax/live/playlist.m3u8',
+    numberChannel: 323
   },
   {
     title: 'InterTV',
+    groupTitle: 'Undefined',
+    info: '1080p',
     id: 'InterTV.ve',
     country: 've',
     logo: 'https://i.ibb.co/HG2DM8G/IMG-20230705-153952.jpg',
-    src: 'https://test.4net.com.ve/hls/124.m3u8',
-    numberChannel: 124
+    description: undefined,
+    status: 'test',
+    src: 'https://streamtv.intervenhosting.net:3175/hybrid/play.m3u8',
+    numberChannel: 324
   },
   {
     title: 'Italianissimo',
+    groupTitle: 'Music',
+    info: '360p [Not 24/7]',
     id: 'Italianissimo.ve',
     country: 've',
     logo: 'https://i.imgur.com/JCpbUZB.png',
     description: 'Music',
-    src: 'https://test.4net.com.ve/hls/125.m3u8',
-    numberChannel: 125
+    status: 'test',
+    src: 'https://vcp.myplaytv.com/italianissimo/italianissimo/playlist.m3u8',
+    numberChannel: 325
   },
   {
     title: 'KandelaTV',
+    groupTitle: 'Music',
+    info: '480p',
     id: 'KandelaTV.ve',
     country: 've',
     logo: 'https://i.imgur.com/cCFxyIp.jpg',
     description: 'Music',
-    src: 'https://test.4net.com.ve/hls/126.m3u8',
-    numberChannel: 126
+    status: 'test',
+    src: 'https://streamtv.intervenhosting.net:3718/live/kandelamedioslive.m3u8',
+    numberChannel: 326
   },
   {
     title: 'LaIguanaTV',
+    groupTitle: 'News',
+    info: '1080p [Not 24/7]',
     id: 'LaIguanaTV.ve',
     country: 've',
     logo: 'https://i.ibb.co/5r3hBNz/logo-footer.png',
     description: 'News',
-    src: 'https://test.4net.com.ve/hls/127.m3u8',
-    numberChannel: 127
+    status: 'test',
+    src: 'https://ythls.armelin.one/channel/UCCc2H9_eNnU7ucq2n7Sh3Rg.m3u8',
+    numberChannel: 327
   },
   {
     title: 'LatinaTV',
+    groupTitle: 'General',
+    info: '1080p',
     id: 'LatinaTV.ve',
     country: 've',
     logo: 'https://i0.wp.com/latinamedios.com/wp-content/uploads/2023/03/LOGO-LATINA-TV-H-500.png?w',
     description: 'General',
-    src: 'https://test.4net.com.ve/hls/128.m3u8',
-    numberChannel: 128
+    status: 'test',
+    src: 'https://streamtv.intervenhosting.net:3639/live/latinatvlive.m3u8',
+    numberChannel: 328
   },
   {
     title: 'MasTalk',
+    groupTitle: 'Entertainment',
+    info: '1080p',
     id: 'MasTalk.ve',
     country: 've',
     logo: 'https://i.imgur.com/unE2LGz.jpg',
     description: 'Entertainment',
-    src: 'https://test.4net.com.ve/hls/129.m3u8',
-    numberChannel: 129
+    status: 'test',
+    src: 'https://vod2live.univtec.com/manifest/89290956-94ab-4950-accb-a54bbd7e176f.m3u8',
+    numberChannel: 329
+  },
+  {
+    title: 'MAXAnime',
+    groupTitle: 'Animation',
+    info: '720p',
+    id: 'MAXAnime.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/Oj3hEBh.jpg',
+    description: 'Animation',
+    status: 'test',
+    src: 'https://d16k620tapvw9n.cloudfront.net/out/v1/8e3062c10bb341feb7ee363c320e06af/index.m3u8',
+    numberChannel: 330
   },
   {
     title: 'MDATelevision',
+    groupTitle: 'Entertainment',
+    info: '720p',
     id: 'MDATelevision.ve',
     country: 've',
     logo: 'https://i.imgur.com/AlY38PN.png',
     description: 'Entertainment',
-    src: 'https://test.4net.com.ve/hls/131.m3u8',
-    numberChannel: 131
+    status: 'test',
+    src: 'https://vcp.myplaytv.com/mdatv/mdatv/playlist.m3u8',
+    numberChannel: 331
   },
   {
     title: 'MonagasVision',
+    groupTitle: 'General',
+    info: '720p [Not 24/7]',
     id: 'MonagasVision.ve',
     country: 've',
     logo: 'https://i.imgur.com/yfgTa2d.png',
     description: 'General',
-    src: 'https://test.4net.com.ve/hls/132.m3u8',
-    numberChannel: 132
+    status: 'test',
+    src: 'https://cloud2.streaminglivehd.com:1936/monagasvision/monagasvision/playlist.m3u8',
+    numberChannel: 332
   },
   {
     title: 'OnzaTV',
+    groupTitle: 'General',
+    info: '720p',
     id: 'OnzaTV.ve',
     country: 've',
     logo: 'https://i.imgur.com/usrP6T2.png',
     description: 'General',
-    src: 'https://test.4net.com.ve/hls/133.m3u8',
-    numberChannel: 133
+    status: 'test',
+    src: 'https://stmv1.srvstm.com/gproducciones/gproducciones/playlist.m3u8',
+    numberChannel: 333
   },
   {
     title: 'OxigenoTV',
+    groupTitle: 'Music',
+    info: '360p [Not 24/7]',
     id: 'OxigenoTV.ve',
     country: 've',
     logo: 'https://i.imgur.com/n3PweBQ.png',
     description: 'Music',
-    src: 'https://test.4net.com.ve/hls/134.m3u8',
-    numberChannel: 134
+    status: 'test',
+    src: 'https://vcp.myplaytv.com/oxigenotv/oxigenotv/playlist.m3u8',
+    numberChannel: 334
   },
   {
     title: 'Panavision',
+    groupTitle: 'Music',
+    info: '1080p',
     id: 'Panavision.ve',
     country: 've',
     logo: 'https://i.imgur.com/qj1qBn1.png',
     description: 'Music',
-    src: 'https://test.4net.com.ve/hls/135.m3u8',
-    numberChannel: 135
+    status: 'test',
+    src: 'https://vcp.myplaytv.com/panavision/panavision/playlist.m3u8',
+    numberChannel: 335
+  },
+  {
+    title: 'PLTV',
+    groupTitle: 'Culture',
+    info: '614p',
+    id: 'PLTV.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/ftblZ6f.jpg',
+    description: 'Culture',
+    status: 'test',
+    src: 'https://vcp2.myplaytv.com/pltv/pltv/playlist.m3u8',
+    numberChannel: 336
   },
   {
     title: 'PromarTV',
+    groupTitle: 'General',
+    info: '1080p [Not 24/7]',
     id: 'PromarTV.ve',
     country: 've',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/9/9f/Promar_Television.png',
     description: 'General',
-    src: 'https://test.4net.com.ve/hls/137.m3u8',
-    numberChannel: 137
+    status: 'test',
+    src: 'http://vcp1.myplaytv.com:1935/promar/promar/playlist.m3u8',
+    numberChannel: 337
+  },
+  {
+    title: 'RadioCaracasRadio',
+    groupTitle: 'Undefined',
+    info: '720p [Not 24/7]',
+    id: 'RadioCaracasRadio.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/QaKbK6w.png',
+    description: undefined,
+    status: 'test',
+    src: 'https://ythls.armelin.one/channel/UC5AA3XP4_pXIELctSsH_L7w.m3u8',
+    numberChannel: 338
   },
   {
     title: 'ReformaTV',
+    groupTitle: 'Religious',
+    info: '1080p',
     id: 'ReformaTV.ve',
     country: 've',
     logo: 'https://i.imgur.com/iZMDddR.png',
     description: 'Religious',
-    src: 'https://test.4net.com.ve/hls/139.m3u8',
-    numberChannel: 139
+    status: 'test',
+    src: 'https://5bf8041cb3fed.streamlock.net/ReformaTV/ReformaTV/playlist.m3u8',
+    numberChannel: 339
+  },
+  {
+    title: 'RLVTV',
+    groupTitle: 'Music',
+    info: '720p [Not 24/7]',
+    id: 'RLVTV.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/hI8tXKW.png',
+    description: 'Music',
+    status: 'test',
+    src: 'https://tv.mundostreaming.cl:3083/live/radiolatinavzlalive.m3u8',
+    numberChannel: 340
   },
   {
     title: 'ShowVenTV',
+    groupTitle: 'Culture;Music',
+    info: '1080p',
     id: 'ShowVenTV.ve',
     country: 've',
     logo: 'https://i.imgur.com/AJIN8Dc.png',
     description: 'Culture;Music',
-    src: 'https://test.4net.com.ve/hls/141.m3u8',
-    numberChannel: 141
+    status: 'test',
+    src: 'https://vcp.myplaytv.com/coll/coll/playlist.m3u8',
+    numberChannel: 341
   },
   {
     title: 'SomosTV',
+    groupTitle: 'General',
+    info: '720p [Not 24/7]',
     id: 'SomosTV.ve',
     country: 've',
     logo: 'https://i.imgur.com/jOroeJZ.png',
     description: 'General',
-    src: 'https://test.4net.com.ve/hls/142.m3u8',
-    numberChannel: 142
+    status: 'test',
+    src: 'https://vcp3.myplaytv.com/somostv/somostv/playlist.m3u8',
+    numberChannel: 342
+  },
+  {
+    title: 'Sucretv',
+    groupTitle: 'Entertainment',
+    info: '360p [Not 24/7]',
+    id: 'Sucretv.ve',
+    country: 've',
+    logo: 'https://i.ibb.co/H2KqhQY/37e5524e9d2738ff48281e577950d0ab.png',
+    description: 'Entertainment',
+    status: 'test',
+    src: 'https://stream.oursnetworktv.com/latin/sucretv/playlist.m3u8',
+    numberChannel: 343
+  },
+  {
+    title: 'SunChannel',
+    groupTitle: 'Travel',
+    info: '720p [Not 24/7]',
+    id: 'SunChannel.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/B26qL3e.png',
+    description: 'Travel',
+    status: 'test',
+    src: 'https://vcndistroscale.teleosmedia.com/linear/sun/sun/playlist.m3u8',
+    numberChannel: 344
+  },
+  {
+    title: 'TAMTV',
+    groupTitle: 'General',
+    info: '240p',
+    id: 'TAMTV.ve',
+    country: 've',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/5/56/Logo_TAM.png',
+    description: 'General',
+    status: 'test',
+    src: 'https://tv.webtuya.com:3459/live/tammeridalive.m3u8',
+    numberChannel: 345
   },
   {
     title: 'TeleAragua',
+    groupTitle: 'General',
+    info: '480p',
     id: 'TeleAragua.ve',
     country: 've',
     logo: 'https://i.imgur.com/jPzcb2S.png',
     description: 'General',
-    src: 'https://test.4net.com.ve/hls/146.m3u8',
-    numberChannel: 146
+    status: 'test',
+    src: 'http://45.173.198.59:8080/hls/nginx3.m3u8?tla=',
+    numberChannel: 346
+  },
+  {
+    title: 'Telebocono',
+    groupTitle: 'General',
+    info: '720p [Not 24/7]',
+    id: 'Telebocono.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/YDE4Jsi.jpg',
+    description: 'General',
+    status: 'test',
+    src: 'https://rpn3.bozztv.com/ssh101/ssh101/tcbstreaming/playlist.m3u8',
+    numberChannel: 347
   },
   {
     title: 'Telecentro',
+    groupTitle: 'General',
+    info: '480p',
     id: 'Telecentro.ve',
     country: 've',
     logo: 'https://i.imgur.com/QtRNfaj.png',
     description: 'General',
-    src: 'https://test.4net.com.ve/hls/148.m3u8',
-    numberChannel: 148
+    status: 'test',
+    src: 'https://streamtv.intervenhosting.net:3161/live/telecentrolive.m3u8',
+    numberChannel: 348
+  },
+  {
+    title: 'TelesolTV',
+    groupTitle: 'General',
+    info: '720p [Not 24/7]',
+    id: 'TelesolTV.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/iagCG6y.png',
+    description: 'General',
+    status: 'test',
+    src: 'https://vcp2.myplaytv.com/telesol/telesol/playlist.m3u8',
+    numberChannel: 349
   },
   {
     title: 'Telesur',
+    groupTitle: 'News',
+    info: '1080p',
     id: 'Telesur.ve',
     country: 've',
     logo: 'https://i.imgur.com/P50VjRX.png',
     description: 'News',
-    src: 'https://test.4net.com.ve/hls/150.m3u8',
-    numberChannel: 150
+    status: 'test',
+    src: 'https://github.com/LaneSh4d0w/IPTV_Exception/raw/master/channels/ve/telesur.m3u8',
+    numberChannel: 350
+  },
+  {
+    title: 'Televen',
+    groupTitle: 'General',
+    info: '1080p',
+    id: 'Televen.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/cxvkUvK.png',
+    description: 'General',
+    status: 'test',
+    src: 'https://setp-televen-ssai-mslv4-open.akamaized.net/hls/live/2107128/televen/index.m3u8',
+    numberChannel: 351
   },
   {
     title: 'TelevisoradeOriente',
+    groupTitle: 'Music',
+    info: '406p',
     id: 'TelevisoradeOriente.ve',
     country: 've',
     logo: 'https://i.imgur.com/wFC6Xxq.png',
     description: 'Music',
-    src: 'https://test.4net.com.ve/hls/152.m3u8',
-    numberChannel: 152
+    status: 'test',
+    src: 'https://cloud.fastchannel.es/manifiest/hls/prog9/tvo.m3u8',
+    numberChannel: 352
   },
   {
     title: 'TNORadio',
+    groupTitle: 'General',
+    info: '720p',
     id: 'TNORadio.ve',
     country: 've',
     logo: 'https://i.ibb.co/0rYsbRk/Logo-TNO-2021-white.png',
     description: 'General',
-    src: 'https://test.4net.com.ve/hls/153.m3u8',
-    numberChannel: 153
+    status: 'test',
+    src: 'https://stmv1.srvstm.com/tnovideo1/tnovideo1/playlist.m3u8',
+    numberChannel: 353
+  },
+  {
+    title: 'TorococoTV',
+    groupTitle: 'General',
+    info: '720p [Not 24/7]',
+    id: 'TorococoTV.ve',
+    country: 've',
+    logo: 'https://i.ibb.co/9N7Scn8/1400-Torococo-TV.png',
+    description: 'General',
+    status: 'test',
+    src: 'https://oracle.streaminghd.cl/torococotelevision/torococotelevision/playlist.m3u8',
+    numberChannel: 354
+  },
+  {
+    title: 'TRT',
+    groupTitle: 'General',
+    info: '410p',
+    id: 'TRT.ve',
+    country: 've',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/6/67/Canal_trt_logo.PNG',
+    description: 'General',
+    status: 'test',
+    src: 'https://vcp3.myplaytv.com/trt/trt/playlist.m3u8',
+    numberChannel: 355
   },
   {
     title: 'TRV',
+    groupTitle: 'General',
+    info: '480p',
     id: 'TRV.ve',
     country: 've',
     logo: 'https://i.ibb.co/Yt6qyjL/trv.png',
     description: 'General',
-    src: 'https://test.4net.com.ve/hls/156.m3u8',
-    numberChannel: 156
+    status: 'test',
+    src: 'https://vcp3.myplaytv.com/trv/trv/playlist.m3u8',
+    numberChannel: 356
+  },
+  {
+    title: 'TVAndes',
+    groupTitle: 'General',
+    info: '720p [Not 24/7]',
+    id: 'TVAndes.ve',
+    country: 've',
+    logo: 'https://i.ibb.co/c1YHQ8K/tvandes.png',
+    description: 'General',
+    status: 'test',
+    src: 'https://vcp3.myplaytv.com/tvandes/tvandes/playlist.m3u8',
+    numberChannel: 357
+  },
+  {
+    title: 'TVFamilia',
+    groupTitle: 'Family',
+    info: '720p',
+    id: 'TVFamilia.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/A3bU5e7.png',
+    description: 'Family',
+    status: 'test',
+    src: 'https://cloudusa.streamingconnect.com/tvfamiliatvbox/tvfamiliaweb.m3u8',
+    numberChannel: 358
   },
   {
     title: 'TVFANB',
+    groupTitle: 'General',
+    info: '720p',
     id: 'TVFANB.ve',
     country: 've',
     logo: 'https://i.imgur.com/yaEyv29.png',
     description: 'General',
-    src: 'https://test.4net.com.ve/hls/159.m3u8',
-    numberChannel: 159
+    status: 'test',
+    src: 'https://vcp2.myplaytv.com/tvfanb/tvfanb/playlist.m3u8',
+    numberChannel: 359
   },
   {
     title: 'TVes',
+    groupTitle: 'General',
+    info: '1080p [Not 24/7]',
     id: 'TVes.ve',
     country: 've',
     logo: 'https://i.imgur.com/QX5DVUB.png',
     description: 'General',
-    src: 'https://test.4net.com.ve/hls/160.m3u8',
-    numberChannel: 160
+    status: 'test',
+    src: 'https://ls.tves.gob.ve/hls/tves.m3u8',
+    numberChannel: 360
+  },
+  {
+    title: 'TVS',
+    groupTitle: 'General',
+    info: '720p',
+    id: 'TVS.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/J8ztiAN.png',
+    description: 'General',
+    status: 'test',
+    src: 'https://vcp3.myplaytv.com/tvs/tvs/playlist.m3u8',
+    numberChannel: 361
+  },
+  {
+    title: 'UnareTV',
+    groupTitle: 'General',
+    info: '392p',
+    id: 'UnareTV.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/RdFohyY.png',
+    description: 'General',
+    status: 'test',
+    src: 'https://srv.panelcast.net/yohancarlos/yohancarlos/playlist.m3u8',
+    numberChannel: 362
   },
   {
     title: 'ValeTV',
+    groupTitle: 'General',
+    info: '480p [Not 24/7]',
     id: 'ValeTV.ve',
     country: 've',
     logo: 'https://i.imgur.com/NMI2Wed.png',
     description: 'General',
-    src: 'https://test.4net.com.ve/hls/163.m3u8',
-    numberChannel: 163
+    status: 'test',
+    src: 'https://cloud.fastchannel.es/manifiest/hls/valetv/valetv_480p.m3u8',
+    numberChannel: 363
   },
   {
     title: 'VePlus',
+    groupTitle: 'Undefined',
+    info: '720p [Geo-blocked]',
     id: 'VePlus.ve',
     country: 've',
     logo: 'https://i.imgur.com/uc3zqcP.png',
-    src: 'https://test.4net.com.ve/hls/164.m3u8',
-    numberChannel: 164
+    description: undefined,
+    status: 'test',
+    src: 'https://veplus.akamaized.net/hls/live/2101013/VEPLUS/master.m3u8',
+    numberChannel: 364
   },
   {
     title: 'Venevision',
+    groupTitle: 'General',
+    info: '1080p [Geo-blocked]',
     id: 'Venevision.ve',
     country: 've',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Logotipo_de_Venevisi%C3%B3n.svg/512px-Logotipo_de_Venevisi%C3%B3n.svg.png',
     description: 'General',
-    src: 'https://test.4net.com.ve/hls/165.m3u8',
-    numberChannel: 165
+    status: 'test',
+    src: 'https://venevision.akamaized.net/hls/live/2098814/VENEVISION/master.m3u8',
+    numberChannel: 365
   },
   {
     title: 'VenevisionInternacional',
+    groupTitle: 'General',
+    info: '720p',
     id: 'VenevisionInternacional.ve',
     country: 've',
     logo: 'https://i.imgur.com/vtGED07.jpg',
     description: 'General',
-    src: 'https://test.4net.com.ve/hls/166.m3u8',
-    numberChannel: 166
+    status: 'test',
+    src: 'https://vod2live.univtec.com/manifest/4c41c0d8-e2e4-43cc-bd43-79afe715e1b3.m3u8',
+    numberChannel: 366
+  },
+  {
+    title: 'VenezolanadeTelevision',
+    groupTitle: 'General',
+    info: '720p [Not 24/7]',
+    id: 'VenezolanadeTelevision.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/FeRTDqz.png',
+    description: 'General',
+    status: 'test',
+    src: 'https://cloud.odysee.live/content/9ad6390b9047d4c43ea0ae6ca3199a3ef70fc8aa/master.m3u8',
+    numberChannel: 367
   },
   {
     title: 'VepacoTV',
+    groupTitle: 'Music',
+    info: '480p',
     id: 'VepacoTV.ve',
     country: 've',
     logo: 'https://i.imgur.com/0bqJksL.png',
     description: 'Music',
-    src: 'https://test.4net.com.ve/hls/168.m3u8',
-    numberChannel: 168
+    status: 'test',
+    src: 'https://cloud.fastchannel.es/manifiest/hls/prog9/vepacotv.m3u8',
+    numberChannel: 368
+  },
+  {
+    title: 'Vive',
+    groupTitle: 'Education',
+    info: '1080p [Not 24/7]',
+    id: 'Vive.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/VEYhkDq.png',
+    description: 'Education',
+    status: 'test',
+    src: 'https://cloud.odysee.live/content/fed20cff907550b0c7d83991fb3630e2a9f90454/master.m3u8',
+    numberChannel: 369
+  },
+  {
+    title: 'VIVOplay',
+    groupTitle: 'General',
+    info: '576p',
+    id: 'VIVOplay.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/o1CxGRy.png',
+    description: 'General',
+    status: 'test',
+    src: 'https://linear-260.frequency.stream/mt/studio/260/hls/master/playlist.m3u8',
+    numberChannel: 370
+  },
+  {
+    title: 'VPItv',
+    groupTitle: 'News',
+    info: '1080p',
+    id: 'VPItv.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/X5hyKU8.png',
+    description: 'News',
+    status: 'test',
+    src: 'https://ott3.streann.com/loadbalancer/services/public/channels/5d23d5882cdce61dae029fd8/playlist.m3u8',
+    numberChannel: 371
+  },
+  {
+    title: 'YATVO',
+    groupTitle: 'Entertainment',
+    info: '720p',
+    id: 'YATVO.ve',
+    country: 've',
+    logo: 'https://i.imgur.com/KuDT78V.png',
+    description: 'Entertainment',
+    status: 'test',
+    src: 'https://rpn3.bozztv.com/ssh101/ssh101/yatvo/playlist.m3u8',
+    numberChannel: 372
   }
+
 ]
 
 //   [

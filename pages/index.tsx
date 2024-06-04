@@ -1,13 +1,13 @@
 import '@vidstack/react/player/styles/base.css';
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { Pagination, Autoplay, Navigation, FreeMode, Scrollbar, Mousewheel } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
 import Image from 'next/image'
-import { useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { isHLSProvider, MediaPlayer, MediaProvider, ScreenOrientationLockType, MediaCanPlayDetail, MediaCanPlayEvent, MediaProviderAdapter, MediaProviderChangeEvent, MediaPlayerInstance, Controls, VolumeSlider, MediaPlayerState, useMediaStore } from '@vidstack/react';
-import { Channel, channelsList } from "../utils/channels"
+import { Channel, channelsList as ChList } from "../utils/channels"
 import { FaAngleDown, FaAngleUp, FaCompress, FaExpand, FaMinus, FaPlus, FaPowerOff } from "react-icons/fa6";
 import { FaVolumeDown, FaVolumeMute } from "react-icons/fa";
 import { AnimatePresence, motion } from "framer-motion";
@@ -33,6 +33,12 @@ interface ScreenSize {
   h: number
 }
 
+const channelsListMap = ChList.map(elem => {
+  return { ...elem, src: `https://test.4net.com.ve/hls/${elem.numberChannel}.m3u8` }
+})
+const channelsList = channelsListMap.filter(elem => {
+  return [ 301, 302, 306, 309, 310, 311, 312, 313, 316, 317, 321, 322, 324, 326, 327, 328, 329, 331, 332, 333, 334, 335, 337, 339, 341, 345, 346, 350, 352, 353, 356, 359, 360, 363, 364, 365, 368, 371].includes(elem.numberChannel)
+})
 export default function Home() {
   const [showVideo, setShowVideo] = useState<boolean>(false)
   const [channel, setChannel] = useState<Channel>(channelsList[1])
@@ -424,6 +430,7 @@ export default function Home() {
         idx = 0
       }
       setChannel(channelsList[idx])
+      setSlideChannel(idx)
     } catch (error) {
       console.log(1001141, error)
     }
@@ -467,7 +474,7 @@ export default function Home() {
           </div>
         </motion.div>}
         {showPIP && <div className='top-0 left-0 w-[100vw] h-[100vh] bg-black fixed z-10 flex justify-center text-xs md:text-sm pt-10' >
-          Reproduciendo en modo pantalla en pantalla
+          Reproduciendo en modo pantalla en pantalla1
         </div>}
 
         <motion.div
@@ -488,7 +495,7 @@ export default function Home() {
             volume={mute ? 0 : volume}
             className={`aspect-video bg-black text-white font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4`}
             // title="Sprite Fight"
-            src={[{ src: channel?.src, type: "video/vimeo" }]}
+            src={[{ src: channel?.src, type: "video/mpeg" }]}
             crossOrigin={true}
             playsInline={true}
             artist=""
@@ -501,15 +508,15 @@ export default function Home() {
             // onError={() => { alert("error1") }}
             onCanPlay={onCanPlay}>
 
-            <div className='fixed top-6 left-6 z-10 bg-red-500 w-64 h-12 flex flex-col justify-center items-center'>
+            {/* <div className='fixed top-6 left-6 z-10 bg-red-500 w-64 h-12 flex flex-col justify-center items-center'>
               <span className='text-white font-extrabold'>{keyPressed}</span>
               <span className='text-white font-extrabold'>{platform}</span>
               <span className='text-white font-extrabold'>Os: {platformOs}</span>
               <span className='text-white font-extrabold'>Browser: {platformBrowser}</span>
-              <span className='text-white font-extrabold'>{channel?.title}</span>
-              {/* <span className='text-white font-extrabold'>volume: {volume}</span>
+              <span className='text-white font-extrabold'>{channel?.title}</span> */}
+            {/* <span className='text-white font-extrabold'>volume: {volume}</span>
               <span className='text-white font-extrabold'>canfullScreen: {canFullScreen}</span> */}
-            </div>
+            {/* </div> */}
             {/* <div className='fixed right-6 bottom-6 z-10 bg-red-500 w-64 flex flex-col justify-center items-center'>
               <span className='text-white font-extrabold'>{keyPressed}</span>
               <span className='text-white font-extrabold'>{platform}</span>
@@ -547,23 +554,24 @@ export default function Home() {
                         spaceBetween={10}
                         loop={false}
                         centeredSlides={true}
-                        // pagination={{
-                        //   clickable: true,
-                        // }}
+                        pagination={{
+                          clickable: true,
+                        }}
                         modules={[FreeMode, Scrollbar, Mousewheel]}
                         className=""
-
                         freeMode={true}
                         scrollbar={true}
                         mousewheel={true}
                       >
+                        <SlideTo slideChannel={slideChannel} />
                         {channelsList?.map((item, idx) => (
                           <SwiperSlide key={idx} onClick={() => {
                             setChannel(item)
                             setSlideChannel(idx)
                           }} >
                             <div className={`${channel.numberChannel === item.numberChannel ? "bg-blue-800 scale-[107%]" : "bg-slate-800"} w-full h-full flex justify-center relative items-center p-2 mx-3 rounded-md transition ease-in-out delay-100 duration-300 hover:scale-110`}>
-                              <div className='absolute left-4 top-2'>{item.title}</div>
+                              <div className='absolute left-2 md:left-4 top-1 md:top-2 text-[13px] md:text-lg'>{item.title}</div>
+                              <div className='absolute right-2 md:right-4 top-1 md:top-2 text-[13px] md:text-lg'>{item.numberChannel}</div>
                               <div className='bg-blue-400* w-32 h-16 md:w-40 md:h-20 relative translate-y-2'>
                                 <Image
                                   loader={({ src }: any) => {
@@ -647,7 +655,7 @@ export default function Home() {
                                   </div>
                                 </div>
                                 <div className="w-1/3 h-full flex flex-col items-center justify-between py-8">
-                                  {true
+                                  {isPc
                                     ? <div onClick={() => { handleFullScreen() }} className="w-[60px] h-[60px]  rounded-full border-4 border-white flex justify-center items-center cursor-pointer"  >
                                       {fullScreen
                                         ? <FaCompress className="w-8 h-8 hover:scale-110" />
@@ -723,4 +731,18 @@ export default function Home() {
       </AnimatePresence>
     </main >
   )
+}
+
+interface propsSlideto {
+  slideChannel: number
+}
+
+const SlideTo: FC<propsSlideto> = ({ slideChannel }) => {
+  const swiper = useSwiper();
+
+  useEffect(() => {
+    swiper.slideTo(slideChannel)
+  }, [slideChannel, swiper])
+  return <>
+  </>
 }
