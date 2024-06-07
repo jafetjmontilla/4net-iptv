@@ -7,7 +7,7 @@ import 'swiper/css/pagination';
 import Image from 'next/image'
 import { FC, useEffect, useRef, useState } from 'react';
 import { isHLSProvider, MediaPlayer, MediaProvider, ScreenOrientationLockType, MediaCanPlayDetail, MediaCanPlayEvent, MediaProviderAdapter, MediaProviderChangeEvent, MediaPlayerInstance, Controls, VolumeSlider, MediaPlayerState, useMediaStore } from '@vidstack/react';
-import { Channel, channelsList as ChList } from "../utils/channels"
+import { Channel} from "../utils/channels"
 import { FaAngleDown, FaAngleUp, FaCompress, FaExpand, FaMinus, FaPlus, FaPowerOff } from "react-icons/fa6";
 import { FaVolumeDown, FaVolumeMute } from "react-icons/fa";
 import { AnimatePresence, motion } from "framer-motion";
@@ -16,6 +16,7 @@ import { PictureInPictureExitIcon, PictureInPictureIcon } from '@vidstack/react/
 import { UAParser } from 'ua-parser-js';
 // import { ChannelSelector } from '../Components/ChannelSelector'
 import { IoClose } from 'react-icons/io5';
+import { fetchApi, queries } from '@/utils/Fetching';
 
 const parser = new UAParser();
 
@@ -33,13 +34,10 @@ interface ScreenSize {
   h: number
 }
 
-const channelsListMap = ChList.map(elem => {
-  return { ...elem, src: `https://test.4net.com.ve/hls/${elem.numberChannel}.m3u8` }
-})
-const channelsList = channelsListMap.filter(elem => {
-  return [ 301, 302, 306, 309, 310, 311, 312, 313, 316, 317, 321, 322, 324, 326, 327, 328, 329, 331, 332, 333, 334, 335, 337, 339, 341, 345, 346, 350, 352, 353, 356, 359, 360, 363, 364, 365, 368, 371].includes(elem.numberChannel)
-})
-export default function Home() {
+
+export default function Home(props: any) {
+  const channelsList=props.results
+  
   const [showVideo, setShowVideo] = useState<boolean>(false)
   const [channel, setChannel] = useState<Channel>(channelsList[1])
   const [showControl, setShowControl] = useState<boolean>(false);
@@ -67,7 +65,6 @@ export default function Home() {
   const [platformBrowser, setPlatfomrBrowser] = useState<string | null>(null);
 
   const [canFullScreen, setCanFullScreen] = useState<string>("no");
-
 
   useEffect(() => {
     if (showVideo && channel && volume) {
@@ -309,7 +306,7 @@ export default function Home() {
     setTimeout(() => {
       console.log("aqui")
       setShowVideo(true)
-      const f1 = channelsList.findIndex(elem => elem.numberChannel === dataStorage.numberChannel)
+      const f1 = channelsList.findIndex((elem:any) => elem.numberChannel === dataStorage.numberChannel)
       setChannel(f1 > -1 ? channelsList[f1] : channelsList[0])
       setSlideChannel(f1)
       setTimeout(() => {
@@ -421,7 +418,7 @@ export default function Home() {
 
   const handleChannel = async (action: number) => {
     try {
-      let idx = channelsList.findIndex(elem => elem.numberChannel === channel?.numberChannel)
+      let idx = channelsList.findIndex((elem:any) => elem.numberChannel === channel?.numberChannel)
       idx = idx + action
       if (idx < 0) {
         idx = channelsList.length - 1
@@ -564,7 +561,7 @@ export default function Home() {
                         mousewheel={true}
                       >
                         <SlideTo slideChannel={slideChannel} />
-                        {channelsList?.map((item, idx) => (
+                        {channelsList?.map((item:any, idx:number) => (
                           <SwiperSlide key={idx} onClick={() => {
                             setChannel(item)
                             setSlideChannel(idx)
@@ -746,3 +743,38 @@ const SlideTo: FC<propsSlideto> = ({ slideChannel }) => {
   return <>
   </>
 }
+
+export async function getServerSideProps({ params }:any) {
+  try {
+        const dataProps = await fetchApi({
+          query: queries.getChannel,
+          variables: {
+            args: { status: "test" },
+            sort: {numberChannel:1},
+            limit: 0,
+            skip: 0,
+          },
+          type: "json"
+        })
+    
+        if (dataProps) {
+          const results = dataProps.results.map((elem:any)=>{
+            elem.src = `https://test.4net.com.ve/hls/${elem.numberChannel}.m3u8`
+            delete elem?.srcOrigin
+            return elem
+          })
+          return {
+            props: {...dataProps, results}, // will be passed to the page component as props
+          }
+        } else {
+          throw new Error("Data null")
+        }
+      } catch (error) {
+        console.log(error)
+        return {
+          props: {},
+           revalidate: 10
+        }
+      }
+}
+
