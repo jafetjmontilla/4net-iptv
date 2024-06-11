@@ -7,7 +7,7 @@ import 'swiper/css/pagination';
 import Image from 'next/image'
 import { FC, useEffect, useRef, useState } from 'react';
 import { isHLSProvider, MediaPlayer, MediaProvider, ScreenOrientationLockType, MediaCanPlayDetail, MediaCanPlayEvent, MediaProviderAdapter, MediaProviderChangeEvent, MediaPlayerInstance, Controls, VolumeSlider, MediaPlayerState, useMediaStore } from '@vidstack/react';
-import { Channel} from "../utils/channels"
+import { Channel } from "../utils/channels"
 import { FaAngleDown, FaAngleUp, FaCompress, FaExpand, FaMinus, FaPlus, FaPowerOff } from "react-icons/fa6";
 import { FaVolumeDown, FaVolumeMute } from "react-icons/fa";
 import { AnimatePresence, motion } from "framer-motion";
@@ -17,6 +17,7 @@ import { UAParser } from 'ua-parser-js';
 // import { ChannelSelector } from '../Components/ChannelSelector'
 import { IoClose } from 'react-icons/io5';
 import { fetchApi, queries } from '@/utils/Fetching';
+import { Logo4plus } from "../Components/icons"
 
 const parser = new UAParser();
 
@@ -36,8 +37,8 @@ interface ScreenSize {
 
 
 export default function Home(props: any) {
-  const channelsList=props.results
-  
+  const channelsList = props.results
+
   const [showVideo, setShowVideo] = useState<boolean>(false)
   const [channel, setChannel] = useState<Channel>(channelsList[1])
   const [showControl, setShowControl] = useState<boolean>(false);
@@ -306,7 +307,7 @@ export default function Home(props: any) {
     setTimeout(() => {
       console.log("aqui")
       setShowVideo(true)
-      const f1 = channelsList.findIndex((elem:any) => elem.numberChannel === dataStorage.numberChannel)
+      const f1 = channelsList.findIndex((elem: any) => elem.numberChannel === dataStorage.numberChannel)
       setChannel(f1 > -1 ? channelsList[f1] : channelsList[0])
       setSlideChannel(f1)
       setTimeout(() => {
@@ -418,7 +419,7 @@ export default function Home(props: any) {
 
   const handleChannel = async (action: number) => {
     try {
-      let idx = channelsList.findIndex((elem:any) => elem.numberChannel === channel?.numberChannel)
+      let idx = channelsList.findIndex((elem: any) => elem.numberChannel === channel?.numberChannel)
       idx = idx + action
       if (idx < 0) {
         idx = channelsList.length - 1
@@ -561,7 +562,7 @@ export default function Home(props: any) {
                         mousewheel={true}
                       >
                         <SlideTo slideChannel={slideChannel} />
-                        {channelsList?.map((item:any, idx:number) => (
+                        {channelsList?.map((item: any, idx: number) => (
                           <SwiperSlide key={idx} onClick={() => {
                             setChannel(item)
                             setSlideChannel(idx)
@@ -598,88 +599,102 @@ export default function Home(props: any) {
                 </motion.div>
               }
             </AnimatePresence>
-            <div className={`${showVideo ? "fixed" : "absolute"} inset-0 z-10 flex h-full w-full flex-col justify-center items-end *-translate-x-7 md:-translate-x-20`}>
+            <div className={`${showVideo ? "fixed" : "absolute"} inset-0 z-10 flex h-full w-full flex-col justify-center items-end -translate-x-16 md:-translate-x-20`}>
               <AnimatePresence >
                 {showControl &&
                   <motion.div
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.8, transition: { duration: 0.4 } }}
+                    animate={{ opacity: 1, transition: { duration: 0.4 } }}
                     exit={{ opacity: 0.5, transition: { delay: 0.4, duration: 0.2 } }}
                   >
+                    <div className="absolute z-10 w-[149px] lg:w-[230px] h-[300px] lg:h-[460px] flex flex-col items-center">
+                      <div className='w-full h-[155px] lg:h-[239px] flex flex-col items-center'>
+                        <div className='w-full flex-1 flex justify-end items-end px-4'>
+                          <div onClick={() => { handleSwithOff() }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-t-[1px] border-t-gray-400 border-r-[3px] border-r-gray-400 border-l-[1px] border-l-gray-100 border-b-[2px] border-b-gray-200 bg-black opacity-50 flex justify-center items-center" >
+                            <FaPowerOff className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
+                          </div>
+                        </div>
+                        <div className='opacity-50 bg-black rounded-full w-[104px] lg:w-[160px] h-[104px] lg:h-[160px] flex justify-center items-center border-t-[1px] border-t-gray-400 border-r-[3px] border-r-gray-400 border-l-[1px] border-l-gray-100 border-b-[2px] border-b-gray-200'>
+                          <div className='h-[26px] lg:h-10 flex-1 flex justify-center items-center'>
+                            <div onClick={() => { handleChannel(-1) }} className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaAngleUp className="w-[13px] lg:w-5 h-[13px] lg:h-5" /></div>
+                          </div>
+                          <div className='rounded-full w-[50%] h-[100%] flex flex-col justify-center items-center' >
+                            <div className='w-[26px] lg:w-10 flex-1 flex justify-center items-center'>
+                              <div onClick={() => { volumeChange(0.05) }} className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaPlus className="w-[13px] lg:w-5 h-[13px] lg:h-5" /></div>
+                            </div>
+                            <div className='rounded-full w-[100%] h-[50%] border-t-[1px] border-t-gray-400 border-r-[3px] border-r-gray-400 border-l-[1px] border-l-gray-100 border-b-[2px] border-b-gray-200' >
+                              <div className='bg-white opacity-10 rounded-full w-[100%] h-[100%]' />
+                            </div>
+                            <div className='w-[26px] lg:w-10 flex-1 flex justify-center items-center'>
+                              <div onClick={() => { volumeChange(-0.05) }} className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaMinus className="w-[13px] lg:w-5 h-[13px] lg:h-5" /></div>
+                            </div>
+                          </div>
+                          <div className='h-[26px] lg:h-10 flex-1 flex justify-center items-center'>
+                            <div onClick={() => { handleChannel(1) }} className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaAngleDown className="w-[13px] lg:w-5 h-[13px] lg:h-5" /></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className='w-[110px] lg:w-[168px] flex-1 flex flex-col'>
+                        <div className='w-full h-1/2 flex'>
+                          <div className='w-1/2 h-full flex justify-center items-center'>
+                            <div onClick={() => { setShowChannels(true) }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-t-[1px] border-t-gray-400 border-r-[3px] border-r-gray-400 border-l-[1px] border-l-gray-100 border-b-[2px] border-b-gray-200 bg-black opacity-50 flex justify-center items-center cursor-pointer" >
+                              <RiHomeLine className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
+                            </div>
+                          </div>
+                          <div className='w-1/2 h-full flex justify-center items-center'>
+                            {isPc
+                              ? <div onClick={() => { handleFullScreen() }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-t-[1px] border-t-gray-400 border-r-[3px] border-r-gray-400 border-l-[1px] border-l-gray-100 border-b-[2px] border-b-gray-200 bg-black opacity-50 flex justify-center items-center cursor-pointer"  >
+                                {fullScreen
+                                  ? <FaCompress className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
+                                  : <FaExpand className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />}
+                              </div>
+                              : <div className="w-[60px] h-[60px]" />
+                            }
+                          </div>
+                        </div>
+                        <div className='w-full h-1/2 flex'>
+                          <div className='w-1/2 h-full flex justify-center items-center'>
+                            <div onClick={() => { setMute(!mute) }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-t-[1px] border-t-gray-400 border-r-[3px] border-r-gray-400 border-l-[1px] border-l-gray-100 border-b-[2px] border-b-gray-200 bg-black opacity-50 flex justify-center items-center cursor-pointer" >
+                              {mute
+                                ? <FaVolumeMute className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
+                                : <FaVolumeDown className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
+                              }
+                            </div>
+                          </div>
+                          <div className='w-1/2 h-full flex justify-center items-center'>
+                            <div onClick={handlePIP} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-t-[1px] border-t-gray-400 border-r-[3px] border-r-gray-400 border-l-[1px] border-l-gray-100 border-b-[2px] border-b-gray-200 bg-black opacity-50 flex justify-center items-center cursor-pointer" >
+                              {!showPIP ?
+                                <PictureInPictureIcon className="w-7 lg:w-11 h-7 lg:h-11 hover:scale-110" />
+                                :
+                                <PictureInPictureExitIcon className="w-5 lg:w-10 h-5 lg:h-10 hover:scale-110" />
+                              }
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className='w-full h-[36px] lg:h-14 flex items-center justify-center text-2xl button-0'>
+                        <Logo4plus className="w-10 lg:w-16 h-10 lg:h-16 hover:scale-110" />
+                      </div>
+                    </div>
                     <AnimatePresence >
                       {!closing &&
                         <motion.div
                           initial={{ opacity: 0 }}
-                          animate={{ opacity: 0.8, transition: { duration: 0.4 } }}
+                          animate={{ opacity: 0.6, transition: { duration: 0.4 } }}
                           exit={{ opacity: 0, transition: { duration: 0.15 } }}
                         >
-
-                          <div className={`bg-black p-2 rounded-3xl *opacity-80 scale-[65%] lg:scale-100`}>
-                            <div className="w-[265px] h-[478px] rounded-3xl border-white border-8 flex flex-col" >
-                              <div className="w-full h-[85%] flex">
-                                <div className="w-1/3 h-full flex flex-col items-center justify-between py-8">
-                                  <div onClick={() => { handleSwithOff() }} className="w-[60px] h-[60px]  rounded-full border-4 border-white flex justify-center items-center cursor-pointer" ><FaPowerOff className="w-8 h-8 hover:scale-110" /></div>
-
-                                  <div
-                                    onMouseEnter={() => setShowThumb(true)}
-                                    onMouseLeave={() => setShowThumb(false)}
-                                    className="w-[56px] md:w-[52px] h-[138px]  rounded-full border-4 border-white flex flex-col justify-center items-center relative" >
-                                    <div className='w-[10px] h-[90px] absolute -translate-x-[66px]'>
-                                      <VolumeSlider.Root
-                                        className="group relative *my-[7.5px] inline-flex w-10 h-full max-h-[90px] cursor-pointer touch-none select-none items-center outline-none *aria-hidden:hidden justify-end"
-                                        orientation="vertical"
-                                      >
-                                        <VolumeSlider.Track className="relative ring-sky-400 z-0 w-[5px] h-full rounded-sm bg-white/30 group-data-[focus]:ring-[3px] rotate-180">
-                                          <VolumeSlider.TrackFill defaultValue={0.1} className="bg-indigo-400 absolute w-full h-[var(--slider-fill)] rounded-sm will-change-[height]" />
-                                        </VolumeSlider.Track>
-                                        <VolumeSlider.Thumb className={`absolute bottom-[var(--slider-fill)] z-20 h-[10px] w-[10px] translate-x-1/4 translate-y-1/2 rounded-full border border-[#cacaca] bg-white opacity-0 ring-white/40 transition-opacity ${showThumb && "opacity-100"} group-data-[active]:opacity-100 group-data-[dragging]:ring-4 will-change-[bottom]`} />
-                                      </VolumeSlider.Root>
-                                    </div>
-                                    <div onClick={() => { volumeChange(0.05) }} className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaPlus className="w-6 h-6" /></div>
-                                    <div className="w-full h-1/3 flex justify-center items-center text-lg">Vol</div>
-                                    <div onClick={() => { volumeChange(-0.05) }} className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaMinus className="w-6 h-6" /></div>
-                                  </div>
-                                  <div onClick={() => { setMute(!mute) }} className="w-[60px] h-[60px]  rounded-full border-4 border-white flex justify-center items-center cursor-pointer" >
-                                    {mute
-                                      ? <FaVolumeMute className="w-8 h-8 hover:scale-110" />
-                                      : <FaVolumeDown className="w-8 h-8 hover:scale-110" />
-                                    }
-                                  </div>
-                                </div>
-                                <div className="w-1/3 h-full flex justify-center items-center">
-                                  <div onClick={() => { setShowChannels(true) }} className="w-[60px] h-[60px]  rounded-full border-4 border-white flex justify-center items-center cursor-pointer" >
-                                    <RiHomeLine className="w-8 h-8 hover:scale-110" />
-                                  </div>
-                                </div>
-                                <div className="w-1/3 h-full flex flex-col items-center justify-between py-8">
-                                  {isPc
-                                    ? <div onClick={() => { handleFullScreen() }} className="w-[60px] h-[60px]  rounded-full border-4 border-white flex justify-center items-center cursor-pointer"  >
-                                      {fullScreen
-                                        ? <FaCompress className="w-8 h-8 hover:scale-110" />
-                                        : <FaExpand className="w-8 h-8 hover:scale-110" />}
-                                    </div>
-                                    : <div className="w-[60px] h-[60px]" />
-                                  }
-
-                                  <div className="w-[56px] md:w-[52px] h-[138px]  rounded-full border-4 border-white flex flex-col justify-center items-center" >
-                                    <div onClick={() => { handleChannel(-1) }} className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaAngleUp className="w-6 h-6" /></div>
-                                    <div className="w-full h-1/3 flex justify-center items-center text-lg">Ch</div>
-                                    <div onClick={() => { handleChannel(1) }} className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaAngleDown className="w-6 h-6" /></div>
-                                  </div>
-                                  <div onClick={handlePIP} className="w-[60px] h-[60px]  rounded-full border-4 border-white flex justify-center items-center cursor-pointer" >
-                                    {!showPIP ?
-                                      <PictureInPictureIcon className="w-11 h-11 hover:scale-110" />
-                                      :
-                                      <PictureInPictureExitIcon className="w-10 h-10 hover:scale-110" />
-                                    }
-                                    {/* <div className='w-9 h-6 rounded-[4px] border-[3px] border-white flex justify-end items-end p-[2px] hover:scale-110'>
-                                      <div className='bg-white w-4 h-2.5 rounded-[2px] border-white' />
-                                    </div> */}
-                                  </div>
-                                </div>
-                              </div>
-                              <div className='w-full flex-1 flex items-center justify-center pb-6 text-2xl'>
-                                <Image style={{ objectFit: 'cover' }} height={10} width={75} alt={channel?.title} src={"/4netBlancoGradient.png"} />
+                          <div className={`bg-black rounded-t-[50px] rounded-b-[120px]`}>
+                            <div className="w-[149px] lg:w-[230px] h-[310px] lg:h-[478px] rounded-t-[50px] rounded-b-[120px] border-gray-400 border-[1px] flex flex-col" >
+                              <div className='w-[42px] h-[88px] lg:h-[140px] absolute z-10 -translate-x-[44px] lg:-translate-x-[46px] translate-y-16 lg:translate-y-24'>
+                                <VolumeSlider.Root
+                                  className="group relative inline-flex w-10 h-full max-h-[88px] lg:max-h-[140px] cursor-pointer touch-none select-none items-center outline-none justify-end"
+                                  orientation="vertical"
+                                >
+                                  <VolumeSlider.Track className="relative ring-sky-400 z-0 w-[5px] h-full rounded-sm bg-white/30 group-data-[focus]:ring-[3px] rotate-180">
+                                    <VolumeSlider.TrackFill defaultValue={0.1} className="bg-indigo-400 absolute w-full h-[var(--slider-fill)] rounded-sm will-change-[height]" />
+                                  </VolumeSlider.Track>
+                                  <VolumeSlider.Thumb className={`absolute bottom-[var(--slider-fill)] z-20 h-[10px] w-[10px] translate-x-1/4 translate-y-1/2 rounded-full border border-[#cacaca] bg-white opacity-0 ring-white/40 transition-opacity ${showThumb && "opacity-100"} group-data-[active]:opacity-100 group-data-[dragging]:ring-4 will-change-[bottom]`} />
+                                </VolumeSlider.Root>
                               </div>
                             </div>
                           </div>
@@ -744,37 +759,37 @@ const SlideTo: FC<propsSlideto> = ({ slideChannel }) => {
   </>
 }
 
-export async function getServerSideProps({ params }:any) {
+export async function getServerSideProps({ params }: any) {
   try {
-        const dataProps = await fetchApi({
-          query: queries.getChannel,
-          variables: {
-            args: { status: "test" },
-            sort: {numberChannel:1},
-            limit: 0,
-            skip: 0,
-          },
-          type: "json"
-        })
-    
-        if (dataProps) {
-          const results = dataProps.results.map((elem:any)=>{
-            elem.src = `https://test.4net.com.ve/hls/${elem.numberChannel}.m3u8`
-            delete elem?.srcOrigin
-            return elem
-          })
-          return {
-            props: {...dataProps, results}, // will be passed to the page component as props
-          }
-        } else {
-          throw new Error("Data null")
-        }
-      } catch (error) {
-        console.log(error)
-        return {
-          props: {},
-           revalidate: 10
-        }
+    const dataProps = await fetchApi({
+      query: queries.getChannel,
+      variables: {
+        args: { status: "test" },
+        sort: { numberChannel: 1 },
+        limit: 0,
+        skip: 0,
+      },
+      type: "json"
+    })
+
+    if (dataProps) {
+      const results = dataProps.results.map((elem: any) => {
+        elem.src = `https://test.4net.com.ve/hls/${elem.numberChannel}.m3u8`
+        delete elem?.srcOrigin
+        return elem
+      })
+      return {
+        props: { ...dataProps, results }, // will be passed to the page component as props
       }
+    } else {
+      throw new Error("Data null")
+    }
+  } catch (error) {
+    console.log(error)
+    return {
+      props: {},
+      revalidate: 10
+    }
+  }
 }
 
