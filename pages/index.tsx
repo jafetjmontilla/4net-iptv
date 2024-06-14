@@ -4,6 +4,7 @@ import { Pagination, Autoplay, Navigation, FreeMode, Scrollbar, Mousewheel } fro
 import 'swiper/css';
 import 'swiper/css/pagination';
 import myGif from '../public/Logotipo Animado 1.gif'
+import { RxCursorArrow } from "react-icons/rx";
 
 import Image from 'next/image'
 import { FC, useEffect, useRef, useState } from 'react';
@@ -18,7 +19,7 @@ import { UAParser } from 'ua-parser-js';
 // import { ChannelSelector } from '../Components/ChannelSelector'
 import { IoClose } from 'react-icons/io5';
 import { fetchApi, queries } from '@/utils/Fetching';
-import { Logo4plus } from "../Components/icons"
+import { Logo4plus, Mano } from "../Components/icons"
 
 const parser = new UAParser();
 
@@ -67,6 +68,15 @@ export default function Home(props: any) {
   const [platformBrowser, setPlatfomrBrowser] = useState<string | null>(null);
 
   const [canFullScreen, setCanFullScreen] = useState<string>("no");
+  const [isMounted, setIsMounted] = useState(false)
+  useEffect(() => {
+    if (!isMounted) {
+      setIsMounted(true)
+    }
+    return () => {
+      setIsMounted(false)
+    }
+  }, [])
 
   useEffect(() => {
     if (showVideo && channel && volume) {
@@ -332,6 +342,16 @@ export default function Home(props: any) {
     }, 500)
   }
 
+  useEffect(() => {
+    if (isMounted) {
+      console.log({ isPc })
+      setTimeout(() => {
+        // handleSwithOn()
+      }, 3000);
+    }
+  }, [isPc, isMounted])
+
+
   const volumeChange = (value: number) => {
     if (mute) {
       setMute(false)
@@ -450,11 +470,16 @@ export default function Home(props: any) {
   return (
     <main
       onClick={() => {
-        waitingConfirmation && handleFullScreen()
-        setWaitingConfirmation(false)
+        if (waitingConfirmation) {
+          handleFullScreen()
+          setWaitingConfirmation(false)
+        }
+        if (!showVideo) {
+          handleSwithOn()
+        }
       }}
       className={`bg-black flex w-screen h-screen flex-col items-center justify-center vertical-content`}    >
-      {!showVideo && <div className='bg-black w-40 h-40'>
+      {!showVideo && <div className='bg-black w-40 h-40 -translate-y-10'>
         <Image src={myGif} alt="mi gif" height={1000} width={1000} />
       </div>}
       <AnimatePresence  >
@@ -463,17 +488,35 @@ export default function Home(props: any) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, transition: { delay: closing ? 1 : 0, duration: 0.4 } }}
           exit={{ opacity: 0, transition: { duration: 0.2 } }}
-          className='absolute -right-2 md:right-10 -bottom-2 md:bottom-10 scale-50 md:scale-100'
+          className='absolute w-full h-20 -right-2 md:right-0 bottom-14 md:bottom-20 scale-50 md:scale-100'
         >
-          <div className='flex flex-col items-center '>
+          <div className='w-full h-20 flex justify-center'>
+            {isPc
+              ? <div className='w-full flex justify-center items-center space-x-4'>
+                <RxCursorArrow className={"text-white w-16 h-16"} />
+                <div className='capitalize* text-3xl flex flex-col'>
+                  <span >Haz click en la pantalla </span>
+                  <span >para ver la Tv</span>
+                </div>
+              </div>
+              : <div className='w-full flex justify-center items-center space-x-4'>
+                <Mano className={"text-white w-28 h-28"} />
+                <div className='capitalize* text-3xl flex flex-col'>
+                  <span >Pulsa la pantalla </span>
+                  <span >para ver la Tv</span>
+                </div>
+              </div>
+            }
+          </div>
+          {/* <div className='flex flex-col items-center '>
             <div className='items-center'>
               <div onClick={handleSwithOn} className="inline-flex cursor-pointer p-8 bg-slate-900 rounded-full hover:scale-110 hover:bg-slate-800 relative justify-center">
                 <FaPowerOff className='w-20 h-20 text-white' />
                 <span className='absolute bottom-0 -translate-y-2 text-white text-xl md:text-lg'>Encender</span>
               </div>
             </div>
-            {/* <Image style={{ objectFit: 'cover' }} height={40} width={300} alt={channel?.title} src={"/4netBlancoGradient.png"} /> */}
-          </div>
+            <Image style={{ objectFit: 'cover' }} height={40} width={300} alt={channel?.title} src={"/4netBlancoGradient.png"} />
+          </div> */}
         </motion.div>}
         {showPIP && <div className='top-0 left-0 w-[100vw] h-[100vh] bg-black fixed z-10 flex justify-center text-xs md:text-sm pt-10' >
           Reproduciendo en modo pantalla en pantalla1
@@ -603,7 +646,7 @@ export default function Home(props: any) {
                     <div onClick={() => {
                       console.log("aqui", valirTimeout)
                       clearTimeout(valirTimeout)
-                    }} className='fixed top-10 left-10 md:left-40 z-10 bg-black opacity-50 w-64 h-12 flex flex-col justify-center items-center rounded-3xl border-t-[1px] border-t-gray-400 border-r-[3px] border-r-gray-400 border-l-[1px] border-l-gray-100 border-b-[2px] border-b-gray-200'>
+                    }} className='fixed top-10 left-10 md:left-40 z-10 bg-black opacity-50 w-64 h-12 flex flex-col justify-center items-center rounded-3xl border-[1px]'>
                       {/* <span className='text-white font-extrabold'>{keyPressed}</span> */}
                       {/* <span className='text-white font-extrabold'>{platform}</span> */}
                       {/* <span className='text-white font-extrabold'>Os: {platformOs}</span> */}
@@ -627,11 +670,11 @@ export default function Home(props: any) {
                       <div className="absolute z-10 w-[149px] lg:w-[230px] h-[300px] lg:h-[460px] flex flex-col items-center">
                         <div className='w-full h-[155px] lg:h-[239px] flex flex-col items-center'>
                           <div className='w-full flex-1 flex justify-end items-end px-4'>
-                            <div onClick={() => { handleSwithOff() }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-t-[1px] border-t-gray-400 border-r-[3px] border-r-gray-400 border-l-[1px] border-l-gray-100 border-b-[2px] border-b-gray-200 bg-black opacity-50 flex justify-center items-center" >
+                            <div onClick={() => { handleSwithOff() }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] bg-black opacity-50 flex justify-center items-center" >
                               <FaPowerOff className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
                             </div>
                           </div>
-                          <div className='opacity-50 bg-black rounded-full w-[104px] lg:w-[160px] h-[104px] lg:h-[160px] flex justify-center items-center border-t-[1px] border-t-gray-400 border-r-[3px] border-r-gray-400 border-l-[1px] border-l-gray-100 border-b-[2px] border-b-gray-200'>
+                          <div className='opacity-50 bg-black rounded-full w-[104px] lg:w-[160px] h-[104px] lg:h-[160px] flex justify-center items-center border-[1px]'>
                             <div className='h-[26px] lg:h-10 flex-1 flex justify-center items-center'>
                               <div onClick={() => { handleChannel(-1) }} className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaAngleUp className="w-[13px] lg:w-5 h-[13px] lg:h-5" /></div>
                             </div>
@@ -639,7 +682,7 @@ export default function Home(props: any) {
                               <div className='w-[26px] lg:w-10 flex-1 flex justify-center items-center'>
                                 <div onClick={() => { volumeChange(0.05) }} className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaPlus className="w-[13px] lg:w-5 h-[13px] lg:h-5" /></div>
                               </div>
-                              <div className='rounded-full w-[100%] h-[50%] border-t-[1px] border-t-gray-400 border-r-[3px] border-r-gray-400 border-l-[1px] border-l-gray-100 border-b-[2px] border-b-gray-200' >
+                              <div className='rounded-full w-[100%] h-[50%] border-[1px]' >
                                 <div className='bg-white opacity-10 rounded-full w-[100%] h-[100%]' />
                               </div>
                               <div className='w-[26px] lg:w-10 flex-1 flex justify-center items-center'>
@@ -654,13 +697,13 @@ export default function Home(props: any) {
                         <div className='w-[110px] lg:w-[168px] flex-1 flex flex-col'>
                           <div className='w-full h-1/2 flex'>
                             <div className='w-1/2 h-full flex justify-center items-center'>
-                              <div onClick={() => { setShowChannels(true) }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-t-[1px] border-t-gray-400 border-r-[3px] border-r-gray-400 border-l-[1px] border-l-gray-100 border-b-[2px] border-b-gray-200 bg-black opacity-50 flex justify-center items-center cursor-pointer" >
+                              <div onClick={() => { setShowChannels(true) }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] bg-black opacity-50 flex justify-center items-center cursor-pointer" >
                                 <RiHomeLine className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
                               </div>
                             </div>
                             <div className='w-1/2 h-full flex justify-center items-center'>
                               {isPc
-                                ? <div onClick={() => { handleFullScreen() }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-t-[1px] border-t-gray-400 border-r-[3px] border-r-gray-400 border-l-[1px] border-l-gray-100 border-b-[2px] border-b-gray-200 bg-black opacity-50 flex justify-center items-center cursor-pointer"  >
+                                ? <div onClick={() => { handleFullScreen() }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] bg-black opacity-50 flex justify-center items-center cursor-pointer"  >
                                   {fullScreen
                                     ? <FaCompress className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
                                     : <FaExpand className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />}
@@ -671,7 +714,7 @@ export default function Home(props: any) {
                           </div>
                           <div className='w-full h-1/2 flex'>
                             <div className='w-1/2 h-full flex justify-center items-center'>
-                              <div onClick={() => { setMute(!mute) }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-t-[1px] border-t-gray-400 border-r-[3px] border-r-gray-400 border-l-[1px] border-l-gray-100 border-b-[2px] border-b-gray-200 bg-black opacity-50 flex justify-center items-center cursor-pointer" >
+                              <div onClick={() => { setMute(!mute) }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] bg-black opacity-50 flex justify-center items-center cursor-pointer" >
                                 {mute
                                   ? <FaVolumeMute className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
                                   : <FaVolumeDown className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
@@ -679,7 +722,7 @@ export default function Home(props: any) {
                               </div>
                             </div>
                             <div className='w-1/2 h-full flex justify-center items-center'>
-                              <div onClick={handlePIP} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-t-[1px] border-t-gray-400 border-r-[3px] border-r-gray-400 border-l-[1px] border-l-gray-100 border-b-[2px] border-b-gray-200 bg-black opacity-50 flex justify-center items-center cursor-pointer" >
+                              <div onClick={handlePIP} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] bg-black opacity-50 flex justify-center items-center cursor-pointer" >
                                 {!showPIP ?
                                   <PictureInPictureIcon className="w-7 lg:w-11 h-7 lg:h-11 hover:scale-110" />
                                   :

@@ -30,7 +30,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "pages/index.tsx1"
+    "pages/index.tsx1",
+    "pages/animategif.js"
   ],
   "exclude": [
     "node_modules"
