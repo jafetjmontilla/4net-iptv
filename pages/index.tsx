@@ -494,7 +494,7 @@ export default function Home(props: any) {
             {isPc
               ? <div className='w-full flex justify-center items-center space-x-4'>
                 <RxCursorArrow className={"text-white w-16 h-16"} />
-                <div className='capitalize* text-3xl flex flex-col'>
+                <div className='capitalize* text-3xl flex flex-col text-white'>
                   <span >Haz click en la pantalla </span>
                   <span >para ver la Tv</span>
                 </div>
