@@ -646,7 +646,7 @@ export default function Home(props: any) {
                     <div onClick={() => {
                       console.log("aqui", valirTimeout)
                       clearTimeout(valirTimeout)
-                    }} className='fixed top-10 left-10 md:left-40 z-10 bg-black opacity-50 w-64 h-12 flex flex-col justify-center items-center rounded-3xl border-[1px]'>
+                    }} className='fixed top-10 left-10 md:left-40 z-10 bg-black opacity-50 w-64 h-12 flex flex-col justify-center items-center rounded-3xl border-[1px] border-gray-800'>
                       {/* <span className='text-white font-extrabold'>{keyPressed}</span> */}
                       {/* <span className='text-white font-extrabold'>{platform}</span> */}
                       {/* <span className='text-white font-extrabold'>Os: {platformOs}</span> */}
@@ -670,19 +670,22 @@ export default function Home(props: any) {
                       <div className="absolute z-10 w-[149px] lg:w-[230px] h-[300px] lg:h-[460px] flex flex-col items-center">
                         <div className='w-full h-[155px] lg:h-[239px] flex flex-col items-center'>
                           <div className='w-full flex-1 flex justify-end items-end px-4'>
-                            <div onClick={() => { handleSwithOff() }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] bg-black opacity-50 flex justify-center items-center" >
+                            <div onClick={() => { handleSwithOff() }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] border-gray-800 bg-black opacity-50 flex justify-center items-center" >
                               <FaPowerOff className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
                             </div>
                           </div>
-                          <div className='opacity-50 bg-black rounded-full w-[104px] lg:w-[160px] h-[104px] lg:h-[160px] flex justify-center items-center border-[1px]'>
+                          <div className='opacity-50 bg-black rounded-full w-[104px] lg:w-[160px] h-[104px] lg:h-[160px] flex justify-center items-center border-[1px] border-gray-800'>
                             <div className='h-[26px] lg:h-10 flex-1 flex justify-center items-center'>
-                              <div onClick={() => { handleChannel(-1) }} className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaAngleUp className="w-[13px] lg:w-5 h-[13px] lg:h-5" /></div>
+                              <div onClick={() => { handleChannel(-1) }} className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110">
+                                {/* <FaAngleUp className="w-[13px] lg:w-5 h-[13px] lg:h-5" /> */}
+                                <span className='text-[40px] -translate-y-1'>·</span>
+                              </div>
                             </div>
                             <div className='rounded-full w-[50%] h-[100%] flex flex-col justify-center items-center' >
                               <div className='w-[26px] lg:w-10 flex-1 flex justify-center items-center'>
                                 <div onClick={() => { volumeChange(0.05) }} className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaPlus className="w-[13px] lg:w-5 h-[13px] lg:h-5" /></div>
                               </div>
-                              <div className='rounded-full w-[100%] h-[50%] border-[1px]' >
+                              <div className='rounded-full w-[100%] h-[50%] border-[1px] border-gray-800' >
                                 <div className='bg-white opacity-10 rounded-full w-[100%] h-[100%]' />
                               </div>
                               <div className='w-[26px] lg:w-10 flex-1 flex justify-center items-center'>
@@ -690,20 +693,23 @@ export default function Home(props: any) {
                               </div>
                             </div>
                             <div className='h-[26px] lg:h-10 flex-1 flex justify-center items-center'>
-                              <div onClick={() => { handleChannel(1) }} className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaAngleDown className="w-[13px] lg:w-5 h-[13px] lg:h-5" /></div>
+                              <div onClick={() => { handleChannel(1) }} className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110">
+                                {/* <FaAngleDown className="w-[13px] lg:w-5 h-[13px] lg:h-5" /> */}
+                                <span className='text-[40px] -translate-y-1'>·</span>
+                              </div>
                             </div>
                           </div>
                         </div>
                         <div className='w-[110px] lg:w-[168px] flex-1 flex flex-col'>
                           <div className='w-full h-1/2 flex'>
                             <div className='w-1/2 h-full flex justify-center items-center'>
-                              <div onClick={() => { setShowChannels(true) }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] bg-black opacity-50 flex justify-center items-center cursor-pointer" >
+                              <div onClick={() => { setShowChannels(true) }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] border-gray-800 bg-black opacity-50 flex justify-center items-center cursor-pointer" >
                                 <RiHomeLine className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
                               </div>
                             </div>
                             <div className='w-1/2 h-full flex justify-center items-center'>
                               {isPc
-                                ? <div onClick={() => { handleFullScreen() }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] bg-black opacity-50 flex justify-center items-center cursor-pointer"  >
+                                ? <div onClick={() => { handleFullScreen() }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] border-gray-800 bg-black opacity-50 flex justify-center items-center cursor-pointer"  >
                                   {fullScreen
                                     ? <FaCompress className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
                                     : <FaExpand className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />}
@@ -714,7 +720,7 @@ export default function Home(props: any) {
                           </div>
                           <div className='w-full h-1/2 flex'>
                             <div className='w-1/2 h-full flex justify-center items-center'>
-                              <div onClick={() => { setMute(!mute) }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] bg-black opacity-50 flex justify-center items-center cursor-pointer" >
+                              <div onClick={() => { setMute(!mute) }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] border-gray-800 bg-black opacity-50 flex justify-center items-center cursor-pointer" >
                                 {mute
                                   ? <FaVolumeMute className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
                                   : <FaVolumeDown className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
@@ -722,7 +728,7 @@ export default function Home(props: any) {
                               </div>
                             </div>
                             <div className='w-1/2 h-full flex justify-center items-center'>
-                              <div onClick={handlePIP} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] bg-black opacity-50 flex justify-center items-center cursor-pointer" >
+                              <div onClick={handlePIP} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] border-gray-800 bg-black opacity-50 flex justify-center items-center cursor-pointer" >
                                 {!showPIP ?
                                   <PictureInPictureIcon className="w-7 lg:w-11 h-7 lg:h-11 hover:scale-110" />
                                   :
@@ -744,7 +750,7 @@ export default function Home(props: any) {
                             exit={{ opacity: 0, transition: { duration: 0.15 } }}
                           >
                             <div className={`bg-black rounded-t-[50px] rounded-b-[120px]`}>
-                              <div className="w-[149px] lg:w-[230px] h-[310px] lg:h-[478px] rounded-t-[50px] rounded-b-[120px] border-gray-400 border-[1px] flex flex-col" >
+                              <div className="w-[149px] lg:w-[230px] h-[310px] lg:h-[478px] rounded-t-[50px] rounded-b-[120px] border-gray-400 border-[1px] border-gray-800 flex flex-col" >
                                 <div className='w-[42px] h-[88px] lg:h-[140px] absolute z-10 -translate-x-[44px] lg:-translate-x-[46px] translate-y-16 lg:translate-y-24'>
                                   <VolumeSlider.Root
                                     className="group relative inline-flex w-10 h-full max-h-[88px] lg:max-h-[140px] cursor-pointer touch-none select-none items-center outline-none justify-end"
