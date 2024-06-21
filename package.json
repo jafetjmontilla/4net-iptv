@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fontsource/manrope": "^5.0.20",
     "@types/react-slider": "^1.3.6",
     "@vidstack/react": "^1.10.9",
     "axios": "^1.7.2",

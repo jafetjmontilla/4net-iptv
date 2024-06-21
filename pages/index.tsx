@@ -19,7 +19,7 @@ import { UAParser } from 'ua-parser-js';
 // import { ChannelSelector } from '../Components/ChannelSelector'
 import { IoClose } from 'react-icons/io5';
 import { fetchApi, queries } from '@/utils/Fetching';
-import { Logo4plus, Mano } from "../Components/icons"
+import { Logo4plus, Mano, Muted, Sound, SelectChannel, Pip, SwitcOn, FullScreen } from "../Components/icons"
 
 const parser = new UAParser();
 
@@ -491,32 +491,31 @@ export default function Home(props: any) {
           className='absolute w-full h-20 -right-2 md:right-0 bottom-14 md:bottom-20 scale-50 md:scale-100'
         >
           <div className='w-full h-20 flex justify-center'>
-            {isPc
+            {/* {isPc
               ? <div className='w-full flex justify-center items-center space-x-4'>
-                <RxCursorArrow className={"text-white w-16 h-16"} />
-                <div className='capitalize* text-3xl flex flex-col text-white'>
+                <RxCursorArrow className={"text-[#f5f5f5] w-16 h-16"} />
+                <div className='capitalize* text-3xl flex flex-col text-[#f5f5f5]'>
                   <span >Haz click en la pantalla </span>
                   <span >para ver la Tv</span>
                 </div>
               </div>
               : <div className='w-full flex justify-center items-center space-x-4'>
-                <Mano className={"text-white w-28 h-28"} />
+                <Mano className={"text-[#f5f5f5] w-28 h-28"} />
                 <div className='capitalize* text-3xl flex flex-col'>
                   <span >Pulsa la pantalla </span>
                   <span >para ver la Tv</span>
                 </div>
               </div>
-            }
-          </div>
-          {/* <div className='flex flex-col items-center '>
-            <div className='items-center'>
-              <div onClick={handleSwithOn} className="inline-flex cursor-pointer p-8 bg-slate-900 rounded-full hover:scale-110 hover:bg-slate-800 relative justify-center">
-                <FaPowerOff className='w-20 h-20 text-white' />
-                <span className='absolute bottom-0 -translate-y-2 text-white text-xl md:text-lg'>Encender</span>
+            } */}
+            <div className='flex flex-col items-center space-y-5'>
+              <div className='items-center'>
+                <div onClick={handleSwithOn} className="inline-flex cursor-pointer p-2 bg-[#f5f5f5] rounded-full hover:scale-110 hover:bg-gray-500 relative justify-center">
+                  <FaPowerOff className='w-12 h-12 text-black' />
+                </div>
               </div>
+              <span className='text-gray-500 text-2xl'>Fournet TV+</span>
             </div>
-            <Image style={{ objectFit: 'cover' }} height={40} width={300} alt={channel?.title} src={"/4netBlancoGradient.png"} />
-          </div> */}
+          </div>
         </motion.div>}
         {showPIP && <div className='top-0 left-0 w-[100vw] h-[100vh] bg-black fixed z-10 flex justify-center text-xs md:text-sm pt-10' >
           Reproduciendo en modo pantalla en pantalla1
@@ -538,7 +537,7 @@ export default function Home(props: any) {
             muted={!showVideo}
             autoPlay={true}
             volume={mute ? 0 : volume}
-            className={`aspect-video bg-black text-white font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4`}
+            className={`aspect-video bg-black text-[#f5f5f5] font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4`}
             // title="Sprite Fight"
             src={[channel?.src]}
             crossOrigin={true}
@@ -564,7 +563,7 @@ export default function Home(props: any) {
                   exit={{ opacity: 0, transition: { delay: 0, duration: 0.3 } }}
                   className='h-[100vh] w-[232px] md:w-[361px] *bg-black fixed top-0 right-0 *-translate-x-[54px] *md:-translate-x-20 z-20 bg-gradient-to-l from-black'
                 >
-                  <div onClick={() => { setShowChannels(false) }} className='w-10 h-10 md:w-12 md:h-12 rounded-full bg-white right-0 *opacity-50 absolute z-50 -translate-x-4 translate-y-8 md:-translate-x-8 md:translate-y-20 text-black flex justify-center items-center cursor-pointer hover:scale-110'>
+                  <div onClick={() => { setShowChannels(false) }} className='w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#f5f5f5] right-0 *opacity-50 absolute z-50 -translate-x-4 translate-y-8 md:-translate-x-8 md:translate-y-20 text-black flex justify-center items-center cursor-pointer hover:scale-110'>
                     <IoClose className='w-8 h-8 text-black' />
                   </div>
                   <div className='w-full h-14 md:h-16 lg:h-24 bg-gradient-to-b from-black absolute z-10 top-0' />
@@ -574,7 +573,7 @@ export default function Home(props: any) {
                   vertical
                   Slides per view
                    */}
-                  <div className="w-[178px] md:w-[281px] h-[100%] relative">
+                  <div className="w-[206px] md:w-[281px] h-[100%] relative">
                     <div className='w-[100%] h-[100%] cursor-pointer '>
                       <Swiper
                         direction={'vertical'}
@@ -603,9 +602,9 @@ export default function Home(props: any) {
                             setChannel(item)
                             setSlideChannel(idx)
                           }} >
-                            <div className={`${channel.numberChannel === item.numberChannel ? "bg-blue-800 scale-[107%] w-full h-full hover:scale-[110%]" : "bg-slate-800 w-[95%] h-[95%] hover:scale-[105%]"} flex justify-center relative items-center p-2 mx-3 rounded-[20px] md:rounded-[32px] transition ease-in-out delay-100 duration-300 text-[13px] md:text-[15px]`}>
-                              <div className='absolute left-4 md:left-5 bottom-[6px] md:bottom-[10px] text-white '>{item.title}</div>
-                              <div className='absolute right-4 md:right-5 bottom-[6px] md:bottom-[10px] text-white'>{item.numberChannel}</div>
+                            <div className={`${channel.numberChannel === item.numberChannel ? "scale-[107%] w-full h-full hover:scale-[110%]" : "*bg-slate-800 w-[95%] h-[95%] hover:scale-[105%]"} bg-[#f5f5f5] flex justify-center relative items-center p-2 mx-3 rounded-[20px] md:rounded-[32px] transition ease-in-out delay-100 duration-300 font-[Manrope]`}>
+                              <div className='absolute left-3 md:left-5 bottom-[4px] md:bottom-[10px] text-black font-semibold text-[12px] md:text-[15px] uppercase'>{item.title}</div>
+                              <div className='absolute right-3 md:right-5 bottom-[4px] md:bottom-[10px] text-black font-semibold text-[13px] md:text-[15px]'>{item.numberChannel}</div>
                               <div className='bg-blue-400* w-32 h-16 md:w-40 md:h-20 relative -translate-y-2'>
                                 <Image
                                   loader={({ src }: any) => {
@@ -646,19 +645,19 @@ export default function Home(props: any) {
                     <div onClick={() => {
                       console.log("aqui", valirTimeout)
                       clearTimeout(valirTimeout)
-                    }} className='fixed top-10 left-10 md:left-40 z-10 bg-black opacity-50 w-64 h-12 flex flex-col justify-center items-center rounded-3xl border-[1px] border-gray-800'>
-                      {/* <span className='text-white font-extrabold'>{keyPressed}</span> */}
-                      {/* <span className='text-white font-extrabold'>{platform}</span> */}
-                      {/* <span className='text-white font-extrabold'>Os: {platformOs}</span> */}
-                      {/* <span className='text-white font-extrabold'>Browser: {platformBrowser}</span> */}
-                      <span className='text-white font-extrabold'>{channel?.title}</span>
-                      <span className='text-white font-extrabold'>{channel?.numberChannel}</span>
-                      {/* <span className='text-white font-extrabold'>volume: {volume}</span> */}
-                      {/* <span className='text-white font-extrabold'>canfullScreen: {canFullScreen}</span> */}
+                    }} className='fixed top-10 left-10 md:left-40 z-10 bg-black opacity-50 w-48 h-12 flex flex-col justify-center items-center rounded-3xl border-[1px] border-gray-800 -space-y-1.5 md:-space-y-1 font-[Manrope]'>
+                      {/* <span className='text-[#f5f5f5] font-extrabold'>{keyPressed}</span> */}
+                      {/* <span className='text-[#f5f5f5] font-extrabold'>{platform}</span> */}
+                      {/* <span className='text-[#f5f5f5] font-extrabold'>Os: {platformOs}</span> */}
+                      {/* <span className='text-[#f5f5f5] font-extrabold'>Browser: {platformBrowser}</span> */}
+                      <span className='text-[#f5f5f5] font-extrabold'>{channel?.title}</span>
+                      <span className='text-[#f5f5f5] font-extrabold'>{channel?.numberChannel}</span>
+                      {/* <span className='text-[#f5f5f5] font-extrabold'>volume: {volume}</span> */}
+                      {/* <span className='text-[#f5f5f5] font-extrabold'>canfullScreen: {canFullScreen}</span> */}
                     </div>
                     {/* <div className='fixed right-6 bottom-6 z-10 bg-red-500 w-64 flex flex-col justify-center items-center'>
-                        <span className='text-white font-extrabold'>{keyPressed}</span>
-                        <span className='text-white font-extrabold'>{platform}</span>
+                        <span className='text-[#f5f5f5] font-extrabold'>{keyPressed}</span>
+                        <span className='text-[#f5f5f5] font-extrabold'>{platform}</span>
                       </div> */}
                   </motion.div>}
                   {(!showChannels && showControl) &&
@@ -671,7 +670,8 @@ export default function Home(props: any) {
                         <div className='w-full h-[155px] lg:h-[239px] flex flex-col items-center'>
                           <div className='w-full flex-1 flex justify-end items-end px-4'>
                             <div onClick={() => { handleSwithOff() }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] border-gray-800 bg-black opacity-50 flex justify-center items-center" >
-                              <FaPowerOff className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
+                              <SwitcOn className="w-6 lg:w-9 h-6 lg:h-9 hover:scale-110 -translate-y-[1px]" />
+                              {/* <FaPowerOff className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" /> */}
                             </div>
                           </div>
                           <div className='opacity-50 bg-black rounded-full w-[104px] lg:w-[160px] h-[104px] lg:h-[160px] flex justify-center items-center border-[1px] border-gray-800'>
@@ -686,7 +686,7 @@ export default function Home(props: any) {
                                 <div onClick={() => { volumeChange(0.05) }} className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaPlus className="w-[13px] lg:w-5 h-[13px] lg:h-5" /></div>
                               </div>
                               <div className='rounded-full w-[100%] h-[50%] border-[1px] border-gray-800' >
-                                <div className='bg-white opacity-10 rounded-full w-[100%] h-[100%]' />
+                                <div className='bg-[#f5f5f5] opacity-10 rounded-full w-[100%] h-[100%]' />
                               </div>
                               <div className='w-[26px] lg:w-10 flex-1 flex justify-center items-center'>
                                 <div onClick={() => { volumeChange(-0.05) }} className="w-full h-1/3 flex justify-center items-center cursor-pointer hover:scale-110"><FaMinus className="w-[13px] lg:w-5 h-[13px] lg:h-5" /></div>
@@ -704,35 +704,36 @@ export default function Home(props: any) {
                           <div className='w-full h-1/2 flex'>
                             <div className='w-1/2 h-full flex justify-center items-center'>
                               <div onClick={() => { setShowChannels(true) }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] border-gray-800 bg-black opacity-50 flex justify-center items-center cursor-pointer" >
-                                <RiHomeLine className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
+                                <SelectChannel className="w-5 lg:w-7 h-5 lg:h-7 hover:scale-110" />
+                                {/* <RiHomeLine className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" /> */}
                               </div>
                             </div>
                             <div className='w-1/2 h-full flex justify-center items-center'>
-                              {isPc
-                                ? <div onClick={() => { handleFullScreen() }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] border-gray-800 bg-black opacity-50 flex justify-center items-center cursor-pointer"  >
-                                  {fullScreen
-                                    ? <FaCompress className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
-                                    : <FaExpand className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />}
-                                </div>
-                                : <div className="w-[60px] h-[60px]" />
-                              }
+                              <div onClick={() => { isPc && handleFullScreen() }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] border-gray-800 bg-black opacity-50 flex justify-center items-center cursor-pointer"  >
+                                {fullScreen
+                                  ? <FaCompress className={`w-5 lg:w-8 h-5 lg:h-8 hover:scale-110 ${!isPc && "opacity-50"}`} />
+                                  : <FullScreen className={`w-5 lg:w-8 h-5 lg:h-8 hover:scale-110 ${!isPc && "opacity-50"}`} />}
+                              </div>
                             </div>
                           </div>
                           <div className='w-full h-1/2 flex'>
                             <div className='w-1/2 h-full flex justify-center items-center'>
                               <div onClick={() => { setMute(!mute) }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] border-gray-800 bg-black opacity-50 flex justify-center items-center cursor-pointer" >
                                 {mute
-                                  ? <FaVolumeMute className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
-                                  : <FaVolumeDown className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
+                                  ? <Muted className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
+                                  : <Sound className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
+                                  // ? <FaVolumeMute className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
+                                  // : <FaVolumeDown className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
                                 }
                               </div>
                             </div>
                             <div className='w-1/2 h-full flex justify-center items-center'>
                               <div onClick={handlePIP} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] border-gray-800 bg-black opacity-50 flex justify-center items-center cursor-pointer" >
-                                {!showPIP ?
-                                  <PictureInPictureIcon className="w-7 lg:w-11 h-7 lg:h-11 hover:scale-110" />
-                                  :
-                                  <PictureInPictureExitIcon className="w-5 lg:w-10 h-5 lg:h-10 hover:scale-110" />
+                                {!showPIP
+                                  ? <Pip className="w-5 lg:w-7 h-5 lg:h-7 hover:scale-110" />
+                                  : <PictureInPictureExitIcon className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
+                                  // ? <PictureInPictureIcon className="w-7 lg:w-11 h-7 lg:h-11 hover:scale-110" />
+                                  // : <PictureInPictureExitIcon className="w-5 lg:w-10 h-5 lg:h-10 hover:scale-110" />
                                 }
                               </div>
                             </div>
@@ -756,10 +757,10 @@ export default function Home(props: any) {
                                     className="group relative inline-flex w-10 h-full max-h-[88px] lg:max-h-[140px] cursor-pointer touch-none select-none items-center outline-none justify-end"
                                     orientation="vertical"
                                   >
-                                    <VolumeSlider.Track className="relative ring-sky-400 z-0 w-[5px] h-full rounded-sm bg-white/30 group-data-[focus]:ring-[3px] rotate-180">
-                                      <VolumeSlider.TrackFill defaultValue={0.1} className="bg-indigo-400 absolute w-full h-[var(--slider-fill)] rounded-sm will-change-[height]" />
+                                    <VolumeSlider.Track className="relative ring-sky-400 z-0 w-[5px] h-full rounded-sm bg-[#f5f5f5]/30 group-data-[focus]:ring-[3px] rotate-180">
+                                      <VolumeSlider.TrackFill defaultValue={0.1} className="bg-white opacity-80 absolute w-full h-[var(--slider-fill)] rounded-sm will-change-[height]" />
                                     </VolumeSlider.Track>
-                                    <VolumeSlider.Thumb className={`absolute bottom-[var(--slider-fill)] z-20 h-[10px] w-[10px] translate-x-1/4 translate-y-1/2 rounded-full border border-[#cacaca] bg-white opacity-0 ring-white/40 transition-opacity ${showThumb && "opacity-100"} group-data-[active]:opacity-100 group-data-[dragging]:ring-4 will-change-[bottom]`} />
+                                    <VolumeSlider.Thumb className={`absolute bottom-[var(--slider-fill)] z-20 h-[10px] w-[10px] translate-x-1/4 translate-y-1/2 rounded-full border border-[#cacaca] bg-[#f5f5f5] opacity-0 ring-[#f5f5f5]/40 transition-opacity ${showThumb && "opacity-100"} group-data-[active]:opacity-100 group-data-[dragging]:ring-4 will-change-[bottom]`} />
                                   </VolumeSlider.Root>
                                 </div>
                               </div>
