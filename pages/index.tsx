@@ -64,7 +64,7 @@ export default function Home(props: any) {
   const [heightVideo, setHeightVideo] = useState<number | null>(null);
   const [keyPressed, setKeyPressed] = useState<string | null>(null);
   const [platform, setPlatfomr] = useState<string | null>(null);
-  const [platformOs, setPlatfomrOs] = useState<string | null>(null);
+  const [platformOs, setPlatformOs] = useState<string | null>(null);
   const [platformBrowser, setPlatfomrBrowser] = useState<string | null>(null);
 
   const [canFullScreen, setCanFullScreen] = useState<string>("no");
@@ -160,25 +160,25 @@ export default function Home(props: any) {
     const isPc = navigator?.userAgentData?.platform === "Windows"
     const userAgent = navigator.userAgent;
     if (/Windows/.test(userAgent)) {
-      setPlatfomrOs("Windows")
+      setPlatformOs("Windows")
     }
     if (/Mac OS X/.test(userAgent)) {
-      setPlatfomrOs("Mac")
+      setPlatformOs("Mac")
     }
     if (/Linux/.test(userAgent)) {
-      setPlatfomrOs("Linux")
+      setPlatformOs("Linux")
     }
     if (/Android/.test(userAgent)) {
-      setPlatfomrOs("Android")
+      setPlatformOs("Android")
     }
     if (/iOS/.test(userAgent)) {
-      setPlatfomrOs("iOS")
+      setPlatformOs("iOS")
     }
 
     setPlatfomr(`${navigator?.userAgentData?.platform} / mobile: ${navigator?.userAgentData?.mobile}`)
     const c = navigator?.userAgent?.split(" ")
     setPlatfomr(`${c[0].split("/")[0]} / dis: ${c[1].split(" ")[0].slice(1)}`)
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Linux/i.test(navigator.userAgent)) {
       setPlatfomr("mobile")
       setIsPc(false)
     } else {
@@ -329,7 +329,7 @@ export default function Home(props: any) {
           setMute(false)
           video.volume = dataStorage?.volume ?? 0.2
           setVolume(dataStorage?.volume ?? 0.2)
-          if (container?.requestFullscreen && !isPc) {
+          if (container?.requestFullscreen && !isPc && platformOs !== "Linux") {
             container?.requestFullscreen({ navigationUI: "hide" });
             (screen.orientation as MyScreenOrientation).lock('landscape')
               .then()
@@ -482,6 +482,11 @@ export default function Home(props: any) {
       {!showVideo && <div className='bg-black w-40 h-40 -translate-y-10'>
         <Image src={myGif} alt="mi gif" height={1000} width={1000} />
       </div>}
+      {/* {<div className='bg-black absolute z-50 bottom-4 left-4 flex flex-col'>
+        <span className='text-[#f5f5f5] font-extrabold text-yellow-500'>{platform}</span>
+        <span className='text-[#f5f5f5] font-extrabold text-yellow-500'>Os: {platformOs}</span>
+        <span className='text-[#f5f5f5] font-extrabold text-yellow-500'>Browser: {platformBrowser}</span>
+      </div>} */}
       <AnimatePresence  >
         {!showVideo && <motion.div
           key={"1"}
