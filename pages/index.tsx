@@ -602,7 +602,7 @@ export default function Home(props: any) {
                             setChannel(item)
                             setSlideChannel(idx)
                           }} >
-                            <div className={`${channel.numberChannel === item.numberChannel ? "scale-[107%] w-full h-full hover:scale-[110%] border-[4px] border-yellow-200" : "*bg-slate-800 w-[95%] h-[95%] hover:scale-[105%]"} bg-[#f5f5f5] flex justify-center relative items-center p-2 mx-3 rounded-[20px] md:rounded-[32px] transition ease-in-out delay-100 duration-300 font-[Manrope]`}>
+                            <div className={`${channel.numberChannel === item.numberChannel ? "scale-[107%] w-full h-full hover:scale-[110%] border-[4px]" : "*bg-slate-800 w-[95%] h-[95%] hover:scale-[105%]"} bg-[#f5f5f5] flex justify-center relative items-center p-2 mx-3 rounded-[20px] md:rounded-[32px] transition ease-in-out delay-100 duration-300 font-[Manrope]`}>
                               <div className='absolute left-3 md:left-5 bottom-[4px] md:bottom-[10px] text-black font-semibold text-[12px] md:text-[15px]'>{item.title}</div>
                               <div className='absolute right-3 md:right-5 bottom-[4px] md:bottom-[10px] text-black font-semibold text-[13px] md:text-[15px]'>{item.numberChannel}</div>
                               <div className='bg-blue-400* w-32 h-16 md:w-40 md:h-20 relative -translate-y-2'>
