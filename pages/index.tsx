@@ -19,7 +19,7 @@ import { UAParser } from 'ua-parser-js';
 // import { ChannelSelector } from '../Components/ChannelSelector'
 import { IoClose } from 'react-icons/io5';
 import { fetchApi, queries } from '@/utils/Fetching';
-import { Logo4plus, Mano, Muted, Sound, SelectChannel, Pip, SwitcOn, FullScreen } from "../Components/icons"
+import { Logo4plus, Mano, Muted, Sound, SelectChannel, Pip, SwitcOn, FullScreen, MaxPip, MinFullScreen } from "../Components/icons"
 
 const parser = new UAParser();
 
@@ -602,8 +602,8 @@ export default function Home(props: any) {
                             setChannel(item)
                             setSlideChannel(idx)
                           }} >
-                            <div className={`${channel.numberChannel === item.numberChannel ? "scale-[107%] w-full h-full hover:scale-[110%]" : "*bg-slate-800 w-[95%] h-[95%] hover:scale-[105%]"} bg-[#f5f5f5] flex justify-center relative items-center p-2 mx-3 rounded-[20px] md:rounded-[32px] transition ease-in-out delay-100 duration-300 font-[Manrope]`}>
-                              <div className='absolute left-3 md:left-5 bottom-[4px] md:bottom-[10px] text-black font-semibold text-[12px] md:text-[15px] uppercase'>{item.title}</div>
+                            <div className={`${channel.numberChannel === item.numberChannel ? "scale-[107%] w-full h-full hover:scale-[110%] border-[4px] border-yellow-200" : "*bg-slate-800 w-[95%] h-[95%] hover:scale-[105%]"} bg-[#f5f5f5] flex justify-center relative items-center p-2 mx-3 rounded-[20px] md:rounded-[32px] transition ease-in-out delay-100 duration-300 font-[Manrope]`}>
+                              <div className='absolute left-3 md:left-5 bottom-[4px] md:bottom-[10px] text-black font-semibold text-[12px] md:text-[15px]'>{item.title}</div>
                               <div className='absolute right-3 md:right-5 bottom-[4px] md:bottom-[10px] text-black font-semibold text-[13px] md:text-[15px]'>{item.numberChannel}</div>
                               <div className='bg-blue-400* w-32 h-16 md:w-40 md:h-20 relative -translate-y-2'>
                                 <Image
@@ -711,8 +711,8 @@ export default function Home(props: any) {
                             <div className='w-1/2 h-full flex justify-center items-center'>
                               <div onClick={() => { isPc && handleFullScreen() }} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] border-gray-800 bg-black opacity-50 flex justify-center items-center cursor-pointer"  >
                                 {fullScreen
-                                  ? <FaCompress className={`w-5 lg:w-8 h-5 lg:h-8 hover:scale-110 ${!isPc && "opacity-50"}`} />
-                                  : <FullScreen className={`w-5 lg:w-8 h-5 lg:h-8 hover:scale-110 ${!isPc && "opacity-50"}`} />}
+                                  ? <MinFullScreen className={`w-5 lg:w-7 h-5 lg:h-7 hover:scale-110 ${!isPc && "opacity-50"}`} />
+                                  : <FullScreen className={`w-5 lg:w-7 h-5 lg:h-7 hover:scale-110 ${!isPc && "opacity-50"}`} />}
                               </div>
                             </div>
                           </div>
@@ -731,7 +731,7 @@ export default function Home(props: any) {
                               <div onClick={handlePIP} className="w-[39px] lg:w-[60px] h-[39px] lg:h-[60px] rounded-full border-[1px] border-gray-800 bg-black opacity-50 flex justify-center items-center cursor-pointer" >
                                 {!showPIP
                                   ? <Pip className="w-5 lg:w-7 h-5 lg:h-7 hover:scale-110" />
-                                  : <PictureInPictureExitIcon className="w-5 lg:w-8 h-5 lg:h-8 hover:scale-110" />
+                                  : <MaxPip className="w-5 lg:w-7 h-5 lg:h-7 hover:scale-110" />
                                   // ? <PictureInPictureIcon className="w-7 lg:w-11 h-7 lg:h-11 hover:scale-110" />
                                   // : <PictureInPictureExitIcon className="w-5 lg:w-10 h-5 lg:h-10 hover:scale-110" />
                                 }
