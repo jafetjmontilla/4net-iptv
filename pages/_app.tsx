@@ -39,30 +39,30 @@ export default function App({ Component, pageProps }: AppProps) {
           }
           setGeoInfo(geoInfo)
           if (window.location.hostname !== "https://4net.plus/") {
-            // console.log(141001)
+            console.log(141001)
             setValir(true)
             setShowValir(true)
           } else {
-            // console.log(141002)
+            console.log(141002)
             const val = geoInfo.connectingIp
             //const val = "38.196.65.179"
             let min = "38.196.64.0"
             let max = "38.196.95.255"
-            // console.log(1410091, "min", IPtoNum(min), "val", IPtoNum(val), "max", IPtoNum(max), IPtoNum(min) < IPtoNum(val))
+            console.log(1410091, "min", IPtoNum(min), "val", IPtoNum(val), "max", IPtoNum(max), IPtoNum(min) < IPtoNum(val))
             if (IPtoNum(min) < IPtoNum(val) && IPtoNum(max) > IPtoNum(val)) {
-              // console.log(141003)
-              // console.log(1410030, "La IP está en el rango 0.")
+              console.log(141003)
+              console.log(1410030, "La IP está en el rango 0.")
               setValir(true)
             }
             min = "38.252.184.0"
-            // max = "38.252.187.255"
+            max = "38.252.187.255"
             console.log(1410091, "min", IPtoNum(min), "val", IPtoNum(val), "max", IPtoNum(max), IPtoNum(min) < IPtoNum(val))
             if (IPtoNum(min) < IPtoNum(val) && IPtoNum(max) > IPtoNum(val)) {
-              // console.log(141004)
-              // console.log(1410041, "La IP está en el rango 1.")
+              console.log(141004)
+              console.log(1410041, "La IP está en el rango 1.")
               setValir(true)
             }
-            // console.log(141005, "el dominio es", window.location.hostname)
+            console.log(141005, "el dominio es", window.location.hostname)
             setShowValir(true)
           }
 
