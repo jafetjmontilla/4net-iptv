@@ -90,6 +90,7 @@ export const fetchApi: CallableFunction = async ({
 
 type queries = {
   getChannel: string
+  getGeoInfo: string
 };
 
 export const queries: queries = {
@@ -110,6 +111,15 @@ export const queries: queries = {
         info
         status
       }
+    }
+  }`,
+  getGeoInfo: `query  {
+    getGeoInfo {
+      referer
+      acceptLanguage
+      loop
+      connectingIp
+      ipcountry
     }
   }`,
 };

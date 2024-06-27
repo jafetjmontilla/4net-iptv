@@ -37,7 +37,6 @@ interface ScreenSize {
   h: number
 }
 
-
 export default function Home(props: any) {
   const channelsList = props.results
 
