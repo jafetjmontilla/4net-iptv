@@ -7,8 +7,6 @@ import { fetchApi, queries } from '@/utils/Fetching';
 import Image from 'next/image';
 
 export default function App({ Component, pageProps }: AppProps) {
-  const [geoIngo, setGeoInfo] = useState<any>();
-  const [customer, setCustomer] = useState<any>();
   const [valir, setValir] = useState<boolean>(false);
   const [showValir, setShowValir] = useState<boolean>(false);
   const [isMounted, setIsMounted] = useState(false)
@@ -24,50 +22,18 @@ export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     if (isMounted) {
       fetchApi({
-        query: queries.getGeoInfo,
+        query: queries.setConnet,
         variables: {},
         type: "json"
       })
-        .then((geoInfo: any) => {
-
-          function IPtoNum(ip: string) {
-            const ipNum = Number(ip.split(".").map(d => ("000" + d).substr(-3)).join(""))
-            if (ipNum > 1000000000) {
-              return Number(ip.split(".").map(d => ("000" + d).substr(-3)).join(""))
-            }
-            return 0
-          }
-          setGeoInfo(geoInfo)
-          if (window.location.hostname !== "https://4net.plus/") {
-            console.log(141001)
-            setValir(true)
-            setShowValir(true)
+        .then((valir: any) => {
+          console.log(1410001, window.location.hostname)
+          if (window.location.hostname === "4net.plus") {
+            setValir(valir)
           } else {
-            console.log(141002)
-            const val = geoInfo.connectingIp
-            //const val = "38.196.65.179"
-            let min = "38.196.64.0"
-            let max = "38.196.95.255"
-            console.log(1410091, "min", IPtoNum(min), "val", IPtoNum(val), "max", IPtoNum(max), IPtoNum(min) < IPtoNum(val))
-            if (IPtoNum(min) < IPtoNum(val) && IPtoNum(max) > IPtoNum(val)) {
-              console.log(141003)
-              console.log(1410030, "La IP está en el rango 0.")
-              setValir(true)
-            }
-            min = "38.252.184.0"
-            max = "38.252.187.255"
-            console.log(1410091, "min", IPtoNum(min), "val", IPtoNum(val), "max", IPtoNum(max), IPtoNum(min) < IPtoNum(val))
-            if (IPtoNum(min) < IPtoNum(val) && IPtoNum(max) > IPtoNum(val)) {
-              console.log(141004)
-              console.log(1410041, "La IP está en el rango 1.")
-              setValir(true)
-            }
-            console.log(141005, "el dominio es", window.location.hostname)
-            setShowValir(true)
+            setValir(true)
           }
-
-
-
+          setShowValir(true)
         })
         .catch((err: any) => console.log(err))
     }
@@ -117,3 +83,7 @@ export default function App({ Component, pageProps }: AppProps) {
     </>
   )
 }
+function padStart(arg0: string, arg1: number, arg2: string) {
+  throw new Error('Function not implemented.');
+}
+

@@ -91,6 +91,7 @@ export const fetchApi: CallableFunction = async ({
 type queries = {
   getChannel: string
   getGeoInfo: string
+  setConnet: string
 };
 
 export const queries: queries = {
@@ -121,6 +122,9 @@ export const queries: queries = {
       connectingIp
       ipcountry
     }
+  }`,
+  setConnet: `mutation  {
+    setConnet 
   }`,
 };
 
