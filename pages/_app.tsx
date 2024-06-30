@@ -28,7 +28,7 @@ export default function App({ Component, pageProps }: AppProps) {
         type: "json"
       })
         .then((valir: any) => {
-          setValir(!valir)
+          setValir(valir)
           setShowValir(true)
         })
         .catch((err: any) => console.log(err))
