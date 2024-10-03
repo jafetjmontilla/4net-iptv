@@ -846,7 +846,7 @@ export async function getServerSideProps({ params }: any) {
 
     if (dataProps) {
       const results = dataProps.results.map((elem: any) => {
-        elem.src = `https://test.4net.com.ve/hls/${elem.numberChannel}.m3u8`
+        elem.src = `https://stream.4net.plus/hls/${elem.numberChannel}.m3u8`
         delete elem?.srcOrigin
         return elem
       })
